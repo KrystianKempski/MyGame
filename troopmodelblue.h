@@ -46,6 +46,7 @@ signals:
 public slots:
     Q_INVOKABLE void updateAll();
     Q_INVOKABLE void updateServer();
+     Q_INVOKABLE void updateModel();
 
 private:
     DataSource * m_dataSource;

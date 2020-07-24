@@ -197,7 +197,13 @@ void TableModelBlue::updateAll()
 
 void TableModelBlue::updateServer()
 {
-         emit troopChaged();         //resetuje plik json na serwerze
+    emit troopChaged();         //resetuje plik json na serwerze
+}
+
+void TableModelBlue::updateModel()
+{
+    emit beginResetModel();
+    emit endResetModel();           //resetuje model
 }
 
 

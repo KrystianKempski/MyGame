@@ -12,7 +12,7 @@ Rectangle {
     property int trIndex: model.row
     property var troopName: model.name
     property var troopSpeed: model.speed
-    property int trRow: model.rowTr
+    property int trRow:  model.rowTr
     property int trCol: model.colTr
     property int b_rowX: model.rowTr*size
     property int b_columnX: model.colTr*size
@@ -25,16 +25,17 @@ Rectangle {
     implicitWidth: size
     implicitHeight: size
     radius: size
-    y: troopExists? b_rowX : 9*size
-    x: troopExists? b_columnX : 9*size
+    y: b_rowX
+    x:  b_columnX
 
 
     Component.onCompleted: {
         battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
-       // troopModelBlue.findEnemy(trRow,trCol,2,!team)
-        // gamelogic.startGame()
         //console.log( barProgress)
     }
+
+
+
     color: "blue"
     Drag.keys: [ colorKey ]
     Drag.active: mouseArea.drag.active
@@ -129,6 +130,17 @@ Rectangle {
             }
         }
         MenuItem { text: "Obrona" }
+    }
+    states: State {
+        when: troopExists==false
+        onCompleted:  {
+            //  console.log(model.rowTr)
+           battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
+           model.colTr=9
+           model.rowTr=9
+
+
+        }
     }
 }
 

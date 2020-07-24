@@ -56,7 +56,9 @@ void GameLogic::attack(int attacker, QString attacked,bool team)
                 if(hp<=dmgDealt){
                     qInfo() << attacked+" zniszczona!";
                     QJsonValue jsonAct(false);
+                    qInfo()<< jsonAct;
                     m_dataSource->dataItems(!team).at(i)->setStatList(23,jsonAct);
+                   // m_dataSource->dataItems(!team).at()
                 }
                 QJsonValue jsonDmg(hp-dmgDealt);
                 m_dataSource->dataItems(!team).at(i)->setStatList(2,jsonDmg);

@@ -25,8 +25,8 @@ Rectangle {
     implicitWidth: size
     implicitHeight: size
     radius: size
-    y: troopExists? b_rowX : 9*size
-    x: troopExists? b_columnX : 9*size
+    y: b_rowX
+    x:b_columnX
 
 
     Component.onCompleted: {
@@ -35,6 +35,8 @@ Rectangle {
         // gamelogic.startGame()
         //console.log( barProgress)
     }
+
+    //onTroopExistsChanged: battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
     color: "red"
     Drag.keys: [ colorKey ]
     Drag.active: mouseArea.drag.active
@@ -129,6 +131,17 @@ Rectangle {
             }
         }
         MenuItem { text: "Obrona" }
+    }
+    states: State {
+        when: troopExists==false
+        onCompleted:  {
+            //  console.log(model.rowTr)
+           battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
+           model.colTr=9
+           model.rowTr=9
+
+
+        }
     }
 }
 
