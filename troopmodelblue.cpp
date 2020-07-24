@@ -1,30 +1,26 @@
-#include "troopmodelred.h"
+#include "troopmodelblue.h"
 
-TableModel2::TableModel2(QObject *parent)
+TableModelBlue::TableModelBlue(QObject *parent)
     : QAbstractTableModel(parent)
 {
-
 }
 
-
-int TableModel2::rowCount(const QModelIndex &parent) const
+int TableModelBlue::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_dataSource->dataItems(m_team).size();
 }
 
-int TableModel2::columnCount(const QModelIndex &parent) const
+int TableModelBlue::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-
     return 26;//m_dataSource->dataItems().at(0)->statList().size();
 
 }
 
-QVariant TableModel2::data(const QModelIndex &index, int role) const
+QVariant TableModelBlue::data(const QModelIndex &index, int role) const
 {
-    //    qInfo() << index;
     if (!index.isValid())
         return QVariant();
 
@@ -48,7 +44,7 @@ QVariant TableModel2::data(const QModelIndex &index, int role) const
         return troop->statList().at(21).toVariant();
     case trHpRole:
         return troop->statList().at(2).toVariant();
-     case trActiveRole:
+    case trActiveRole:
         return troop->statList().at(23).toVariant();
     default:
         qInfo() << "błąd roli!";
@@ -59,9 +55,8 @@ QVariant TableModel2::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool TableModel2::setData(const QModelIndex &index, const QVariant &value, int role)
+bool TableModelBlue::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-
     if(index.row()<0 || index.row()>=m_dataSource->dataItems(m_team).size()) return false;
     bool ok;
     Troop *troop = m_dataSource->dataItems(m_team).at(index.row());
@@ -124,14 +119,16 @@ bool TableModel2::setData(const QModelIndex &index, const QVariant &value, int r
     }
 }
 
-Qt::ItemFlags TableModel2::flags(const QModelIndex &index) const
+Qt::ItemFlags TableModelBlue::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
+
     return Qt::ItemIsEditable;
+
 }
 
-QHash<int, QByteArray> TableModel2::roleNames() const
+QHash<int, QByteArray> TableModelBlue::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[trHeaderRole]="header";
@@ -143,11 +140,10 @@ QHash<int, QByteArray> TableModel2::roleNames() const
     roles[trMovedRole]="moved";
     roles[trHpRole]="hp";
     roles[trActiveRole]="active";
-
     return roles;
 }
 
-QStringList TableModel2::findEnemy(int row, int col, int range, bool team) const
+QStringList TableModelBlue::findEnemy(int row, int col, int range, bool team) const
 {
     QStringList enemy;
     for(int i=0;i<m_dataSource->dataItems(team).size();i++){
@@ -160,26 +156,24 @@ QStringList TableModel2::findEnemy(int row, int col, int range, bool team) const
     }
     return enemy;
 }
-
-
-DataSource *TableModel2::dataSource() const
+DataSource *TableModelBlue::dataSource() const
 {
     return m_dataSource;
 }
 
-void TableModel2::setDataSource(DataSource *dataSource)
+void TableModelBlue::setDataSource(DataSource *dataSource)
 {
     beginResetModel();
 
     if(m_dataSource && m_signalConnected) m_dataSource->disconnect(this);
     m_dataSource = dataSource;
 
-    connect(m_dataSource,&DataSource::preInsertTroopRed,this,[=](){
+    connect(m_dataSource,&DataSource::preInsertTroopBlue,this,[=](){
         const int index = m_dataSource->dataItems(m_team).size();
         beginInsertRows(QModelIndex(),index,index);
     });
 
-    connect(m_dataSource,&DataSource::postInsertTroopRed,this,[=](){
+    connect(m_dataSource,&DataSource::postInsertTroopBlue,this,[=](){
         endInsertRows();
     });
 
@@ -194,20 +188,17 @@ void TableModel2::setDataSource(DataSource *dataSource)
     endResetModel();
 }
 
-void TableModel2::updateAll()
+void TableModelBlue::updateAll()
 {
     emit beginResetModel();
     emit endResetModel();           //resetuje model
     emit troopChaged();             //resetuje plik json na serwerze
 }
 
-void TableModel2::updateServer()
+void TableModelBlue::updateServer()
 {
-     emit troopChaged();
+         emit troopChaged();         //resetuje plik json na serwerze
 }
-
-
-
 
 
 

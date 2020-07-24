@@ -7,7 +7,7 @@ import QtQml.Models 2.1
 import Qt.labs.qmlmodels 1.0
 
 Page {
-    id: page1
+    id: page3
     visible: true
 
     property int widthProp
@@ -29,7 +29,7 @@ Page {
             id: leftBox1
             width: leftToolbar.width
             height: 200
-            color: "red"
+            color: "blue"
             opacity: 0.6
         }
         Rectangle{
@@ -43,7 +43,7 @@ Page {
     Item {
         id: root
         anchors.left: leftToolbar.right
-        width: page1.width-400
+        width: page3.width-400
         height: parent.height//-cellSize
         ScrollView{
             id: view
@@ -64,49 +64,27 @@ Page {
                 source: "qrc:/images/field.jpg"
             }
             TableView {
-
                 id: tableview
                 implicitHeight: cellSize*10
                 implicitWidth: cellSize*10
-
-                // anchors.fill: parent
                  clip: true
 
                 model: battleModel2
-                delegate: Cell { colorKey: "red"; size: cellSize }
+                delegate: Cell { colorKey: "blue"; size: cellSize }
             }
 
 
             Repeater {
-
-                model: troopModelBlue
-                delegate: TokenBlue{ colorKey: "blue"; size: cellSize; editable: false}
-            } Repeater {
-
+                z: 1
                 model: troopModelRed
-                delegate: TokenRed { colorKey: "red"; size: cellSize; editable: true}
+                delegate: TokenRed { colorKey: "red"; size: cellSize; editable: false}
+            }
+            Repeater {
+                z: 2
+                model: troopModelBlue
+                delegate: TokenBlue { colorKey: "blue"; size: cellSize; editable: true}
             }
 
-            //   }
-
-        }
-
-    }
-
-    Rectangle {
-        id:rightColumn
-        anchors.left: root.right
-        width: 200
-        height: parent.height
-        color: "grey"
-        Button {
-            anchors.bottom: rightColumn.bottom
-            id: btnReady
-            text: "Ready"
-            onClicked: {
-                gamelogic.playerReady(1)
-                gamelogic.nextTurn()
-            }
         }
 
     }

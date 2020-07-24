@@ -1,5 +1,5 @@
-#ifndef TABLEMODEL2_H
-#define TABLEMODEL2_H
+#ifndef TABLEMODEL3_H
+#define TABLEMODEL3_H
 
 #include <QAbstractTableModel>
 #include <QDebug>
@@ -9,12 +9,12 @@
 #include <QJsonObject>
 #include "troop.h"
 
-class TableModel2 : public QAbstractTableModel
+class TableModelBlue : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit TableModel2(QObject *parent = nullptr);
+    explicit TableModelBlue(QObject *parent = nullptr);
     Q_PROPERTY(DataSource * dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
     enum TroopRoles{
         trHeaderRole=Qt::UserRole+1,
@@ -27,7 +27,6 @@ public:
         trUpdateRole=Qt::UserRole+8,
         trHpRole=Qt::UserRole+9,
         trActiveRole=Qt::UserRole+10
-
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -45,7 +44,7 @@ signals:
     void dataSourceChanged(DataSource * dataSource);
     void troopChaged();
 public slots:
-   Q_INVOKABLE void updateAll();
+    Q_INVOKABLE void updateAll();
     Q_INVOKABLE void updateServer();
 
 private:
@@ -53,7 +52,7 @@ private:
     bool m_signalConnected=false;
     QHash<int,QString> m_header;
     bool m_isHeader;
-    bool m_team=true;
+    bool m_team=false;
 
 };
 

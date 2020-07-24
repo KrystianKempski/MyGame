@@ -11,7 +11,7 @@ Page {
     property int heightProp
     property int cellHeight: 50
     property int cellWidth: 100
-    id:page2
+    id:page4
     Item {
         id: row
         width: widthProp
@@ -106,7 +106,7 @@ Page {
                         }
                         delegate: Rectangle {
                             id:headerCell
-                            color: "red"
+                            color: "blue"
                             border.color: "black"
                             implicitWidth: cellWidth
                             implicitHeight: cellHeight
@@ -127,9 +127,9 @@ Page {
                             id:tableView2
                             anchors.fill: parent
                             clip: true
-                            model: troopModelRed
+                            model: troopModelBlue
                             delegate: Rectangle {
-                                color: "red"
+                                color: "blue"
                                 border.color: "black"
                                 implicitWidth: cellWidth
                                 implicitHeight: cellHeight
@@ -138,11 +138,9 @@ Page {
                                     anchors.fill: parent
                                     text: model.troops
                                     onAccepted: {
-                                        //troopModelRed.setData(troopModelRed.index(model.row,model.col),text,258)
                                         model.troops = text
                                         troopModelRed.updateServer()
                                     }
-
                                 }
                             }
 

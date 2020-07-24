@@ -5,8 +5,8 @@ import QtQuick.Controls 2.5
 Rectangle {
     id: token
     property string colorKey
+    property bool team: false
     property int size
-    property bool team: true
     property var enemies
     property bool editable
     property int trIndex: model.row
@@ -17,8 +17,8 @@ Rectangle {
     property int b_rowX: model.rowTr*size
     property int b_columnX: model.colTr*size
     property int hp: model.hp
-    property bool troopExists:model.active//troopModelRed.data(troopModelRed.index(trIndex,23),258)          //check if troop is on battlefield
-    property double barProgress: hp/troopModelRed.data(troopModelRed.index(trIndex,24),258)
+    property bool troopExists: model.active//troopModelBlue.data(troopModelBlue.index(model.row,23),258)          //check if troop is on battlefield
+    property double barProgress: hp/troopModelBlue.data(troopModelBlue.index(trIndex,24),258)
     property var temp
 
     opacity: troopExists? 1 : 0.5
@@ -31,11 +31,11 @@ Rectangle {
 
     Component.onCompleted: {
         battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
-       // troopModelRed.findEnemy(trRow,trCol,2,false)
+       // troopModelBlue.findEnemy(trRow,trCol,2,!team)
         // gamelogic.startGame()
         //console.log( barProgress)
     }
-    color: "red"
+    color: "blue"
     Drag.keys: [ colorKey ]
     Drag.active: mouseArea.drag.active
     Drag.hotSpot.x: size/2
@@ -73,7 +73,7 @@ Rectangle {
             id: hpValue
             color: "white"
             anchors.centerIn: parent
-            text: hp+"/"+troopModelRed.data(troopModelRed.index(trIndex,24),258)
+            text: hp+"/"+troopModelBlue.data(troopModelBlue.index(trIndex,24),258)
         }
     }
     MouseArea {
@@ -111,7 +111,7 @@ Rectangle {
                 model.rowTr=token.y/size
                 model.colTr=token.x/size
                 model.moved=1                                                                           //zaznaczanie że oddział się ruszył
-                troopModelRed.updateAll()                                                             //update modelu i serwera
+                troopModelBlue.updateAll()                                                             //update modelu i serwera
             }
         }
     }
@@ -120,7 +120,7 @@ Rectangle {
         Menu{
             title: "Atak"
             Repeater {
-                model: troopModelRed.findEnemy(trRow,trCol,1,false)
+                model: troopModelBlue.findEnemy(trRow,trCol,1,true)
                 MenuItem {
                     text: modelData
                     onClicked: gamelogic.attack(trIndex,modelData,team)
