@@ -9,20 +9,20 @@ import Qt.labs.qmlmodels 1.0
 Page {
     id: page1
     visible: true
-
+    
     property int widthProp
     property int heightProp
     width: widthProp
     height: heightProp
     title: qsTr("Hello World")
     property int cellSize: 64
-    Column{
+    Item {
         id: leftToolbar
         width: 200
         height: parent.height
         anchors.left: parent.left
         anchors.leftMargin: 0
-        spacing: -1
+        // spacing: -1
         Rectangle{
             x: 0
             y:0
@@ -38,6 +38,50 @@ Page {
             width: leftToolbar.width
             height: leftToolbar.height-leftBox1.height
             color: "black"
+            Rectangle{
+                id: console1
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.rightMargin: 5
+                anchors.bottomMargin: 5
+                width: parent.width-10
+                height: 200
+                radius: 5
+                //width: parent.width-10
+                // height: parent.height-200
+                //width: parent.width-10
+                color: "white"
+                Flickable {
+                    id: flickable
+                    anchors.fill: parent
+
+                    contentWidth: parent.width
+                    contentHeight: 500
+                    flickableDirection: Flickable.VerticalFlick
+                    clip: true
+                    onContentHeightChanged: Qt.callLater(() => contentY = contentHeight - height)
+                    TextArea.flickable: TextArea {
+                        id:txtConsole
+                        font.pixelSize: 12
+                        width: parent.width
+                        height: 200
+                        color:  "black"
+                        wrapMode: TextArea.Wrap
+                        text:dataSource.readConsole
+
+                        onTextChanged: {
+                            flickable.contentY = txtConsole.height - flickable.height
+                            console.log("OnTextChanged - contentY changed to: " + flickable.contentY)
+                        }
+                    }
+                    onContentYChanged: console.log(contentY)
+                    contentY: contentHeight-height//  20// txtConsole.height
+
+                    ScrollBar.vertical: ScrollBar { }
+                }
+            }
+
+
         }
     }
     Item {
@@ -70,7 +114,7 @@ Page {
                 implicitWidth: cellSize*10
 
                 // anchors.fill: parent
-                 clip: true
+                clip: true
 
                 model: battleModel2
                 delegate: Cell { colorKey: "red"; size: cellSize }
@@ -94,13 +138,23 @@ Page {
     }
 
     Rectangle {
-        id:rightColumn
+        id:rightToolBar
         anchors.left: root.right
         width: 200
         height: parent.height
         color: "grey"
         Button {
-            anchors.bottom: rightColumn.bottom
+            anchors.bottom: btnReady.top
+            id: btnAddTroops
+            text: "add"
+            onClicked: {
+                dataSource.fetchTroops(true)
+                // dataSource.writeConsole("pobrano jednostki\r\n")
+
+            }
+        }
+        Button {
+            anchors.bottom: rightToolBar.bottom
             id: btnReady
             text: "Ready"
             onClicked: {

@@ -118,5 +118,11 @@ void BattlefieldModel2::colorCells(int row, int col, int speed, int color,int mo
     }
 }
 
+void BattlefieldModel2::updateModel()
+{
+    emit beginResetModel();
+    emit endResetModel();           //resetuje model
+}
+
 
 

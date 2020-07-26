@@ -75,7 +75,7 @@ bool TableModelBlue::setData(const QModelIndex &index, const QVariant &value, in
         }
         if(troop->statList().at(index.column())!=json){
             troop->setStatList(index.column(),json);
-            emit dataChanged(index,index, {role, trNameRole,trHpRole,trActiveRole});
+            emit dataChanged(index,index, {role, trNameRole,trHpRole,trActiveRole,trRowRole,trColRole});
             //emit troopChaged();
             return true;
         }
@@ -123,9 +123,7 @@ Qt::ItemFlags TableModelBlue::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
-
     return Qt::ItemIsEditable;
-
 }
 
 QHash<int, QByteArray> TableModelBlue::roleNames() const

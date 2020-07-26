@@ -27,7 +27,6 @@ public:
         trUpdateRole=Qt::UserRole+8,
         trHpRole=Qt::UserRole+9,
         trActiveRole=Qt::UserRole+10
-
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

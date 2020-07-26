@@ -26,14 +26,13 @@ Rectangle {
     implicitHeight: size
     radius: size
     y: b_rowX
-    x:  b_columnX
+    x: b_columnX
 
 
     Component.onCompleted: {
         battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
         //console.log( barProgress)
     }
-
 
 
     color: "blue"
@@ -116,6 +115,17 @@ Rectangle {
             }
         }
     }
+    states: State {
+        when: troopExists==false
+        onCompleted:  {
+            //  console.log(model.rowTr)
+           battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
+           model.colTr=9
+           model.rowTr=9
+
+
+        }
+    }
     Menu{
         id: actionMenu
         Menu{
@@ -131,17 +141,7 @@ Rectangle {
         }
         MenuItem { text: "Obrona" }
     }
-    states: State {
-        when: troopExists==false
-        onCompleted:  {
-            //  console.log(model.rowTr)
-           battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
-           model.colTr=9
-           model.rowTr=9
 
-
-        }
-    }
 }
 
 

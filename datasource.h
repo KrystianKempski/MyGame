@@ -17,8 +17,9 @@ class DataSource : public QObject
 
 public:
     explicit DataSource(QObject *parent = nullptr);
-    Q_INVOKABLE void fetchTroops();;
+    Q_INVOKABLE void fetchTroops();
     Q_INVOKABLE void addTroopRow();
+    Q_PROPERTY(QString readConsole READ readConsole WRITE writeConsole NOTIFY consoleChanged);
     // Q_INVOKABLE void removeLastTroop();
     QList<Troop*> dataItems(bool team) const;
     // Q_INVOKABLE void addTroop();
@@ -30,6 +31,7 @@ public:
     int getCellRowCount() const;
     int getCellColumnCount() const;
     void initialize();
+    QString readConsole() const;
 
 signals:
     void preInsertTroopRed();
@@ -39,18 +41,17 @@ signals:
     void preRemoveTroop(int index);
     void postRemoveTroop();
     void tokenIn(int row,int col,bool val);
+    Q_INVOKABLE void consoleChanged(QString readConsole);
 
 private slots:
     void dataReadyRead();
     void readFinished();
-
     void writeFinished();;
 public slots:
     Q_INVOKABLE void changeItem();
     Q_INVOKABLE void setTokenIn(int row, int column, bool val);
     Q_INVOKABLE void setCellColor(int row, int column, QString val);
-
-
+    void writeConsole(QString readConsole);
 
 private:
     QByteArray updateData();
@@ -63,10 +64,10 @@ private:
     QHash<int,QString> statNames;
     int m_cellRows=10;
     int m_cellColumns=10;
-    // QVector<QVector<bool>>* m_cells = new QVector<QVector<bool>>;
-    bool m_cells[10][10];
+    //bool m_cells[10][10];
     QVector<bool> *m_tokenIn;
     QVector<QString> *m_cellColor;
+    QString m_console;
 
 };
 

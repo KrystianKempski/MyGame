@@ -1,10 +1,12 @@
 #include "datasource.h"
+#include <QMetaObject>
 
 DataSource::DataSource(QObject *parent) : QObject(parent)
 {
     m_netManager= new QNetworkAccessManager(this);
     m_NetReply =nullptr;
     m_dataBuffer = new QByteArray;
+    m_console = "";
 
     statNames.insert(0,"NAME");
     statNames.insert(1,"TYPE");
@@ -161,16 +163,18 @@ void DataSource::readFinished()
             troop->setStatList(23,active);
             troop->setStatList(24,maxHp);
             troop->setStatList(25,blank3);
-         //   troop->read();
-//            bool teamRed=false;
-//            if(troop->statList().at(20).toBool()) teamRed=true;
+            //   troop->read();
+            //            bool teamRed=false;
+            //            if(troop->statList().at(20).toBool()) teamRed=true;
             addTroop(troop,troop->statList().at(20).toBool());
         }
         m_dataBuffer->clear();
     }else{
         qInfo() << "ERROR";
         qInfo() << m_NetReply->errorString();
+        writeConsole("Błąd! \r\n"+m_NetReply->errorString());
     }
+    writeConsole("pobrano jednostki");
     qInfo() << "readFinnished";
     m_netManager->clearConnectionCache();
     m_NetReply->close();
@@ -205,6 +209,11 @@ int DataSource::getCellColumnCount() const
     return m_cellColumns;
 }
 
+QString DataSource::readConsole() const
+{
+    return m_console;
+}
+
 void DataSource::setTokenIn(int row, int col, bool val)
 {
     m_tokenIn->replace(row*m_cellRows+col,val);
@@ -214,6 +223,17 @@ void DataSource::setTokenIn(int row, int col, bool val)
 void DataSource::setCellColor(int row, int col, QString val)
 {
     m_cellColor->replace(row*m_cellRows+col,val);
+}
+
+void DataSource::writeConsole(QString console)
+{
+    if (m_console == console)
+        return;
+
+    m_console = m_console + "\r\n" + console;
+
+    emit consoleChanged(m_console);
+
 }
 
 
@@ -226,12 +246,6 @@ void DataSource::dataReadyRead()
 {
     m_dataBuffer->append(m_NetReply->readAll());
 }
-
-
-
-
-
-
 
 
 

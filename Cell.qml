@@ -26,10 +26,10 @@ DropArea {
         anchors.fill: parent
         color: model.colorRole
         opacity: 0.6
-        Text {
-            id: text
-            text: model.tokenInRole
-        }
+//        Text {
+//            id: text
+//            text: model.tokenInRole
+//        }
        // Component.onCompleted: //console.log(model.colorRole)
 
 
@@ -42,8 +42,9 @@ DropArea {
                 //   cell.tokenIn= model.tokenIn
             }
             PropertyChanges {
-              //  target: cellRect
-               // color: "grey"
+                target: cellRect
+                border.width: 3
+                opacity:1
             }
 
         }

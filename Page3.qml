@@ -38,6 +38,36 @@ Page {
             width: leftToolbar.width
             height: leftToolbar.height-leftBox1.height
             color: "black"
+            Rectangle{
+                id: console1
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.rightMargin: 5
+                anchors.bottomMargin: 5
+                width: parent.width-10
+                height: 200
+                radius: 5
+                //width: parent.width-10
+                // height: parent.height-200
+                //width: parent.width-10
+                color: "white"
+                Flickable {
+                    id: flickable
+                    anchors.fill: parent
+
+                    TextArea.flickable: TextArea {
+                        font.pixelSize: 12
+                        color:  "black"
+                        readOnly: true
+                        text: dataSource.readConsole
+                        wrapMode: TextArea.Wrap
+                    }
+
+                    ScrollBar.vertical: ScrollBar { }
+                }
+            }
+
+
         }
     }
     Item {

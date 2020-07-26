@@ -3,9 +3,7 @@
 TableModel2::TableModel2(QObject *parent)
     : QAbstractTableModel(parent)
 {
-
 }
-
 
 int TableModel2::rowCount(const QModelIndex &parent) const
 {
@@ -17,14 +15,12 @@ int TableModel2::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-
     return 26;//m_dataSource->dataItems().at(0)->statList().size();
 
 }
 
 QVariant TableModel2::data(const QModelIndex &index, int role) const
 {
-    //    qInfo() << index;
     if (!index.isValid())
         return QVariant();
 
@@ -48,7 +44,7 @@ QVariant TableModel2::data(const QModelIndex &index, int role) const
         return troop->statList().at(21).toVariant();
     case trHpRole:
         return troop->statList().at(2).toVariant();
-     case trActiveRole:
+    case trActiveRole:
         return troop->statList().at(23).toVariant();
     default:
         qInfo() << "błąd roli!";
@@ -61,7 +57,6 @@ QVariant TableModel2::data(const QModelIndex &index, int role) const
 
 bool TableModel2::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-
     if(index.row()<0 || index.row()>=m_dataSource->dataItems(m_team).size()) return false;
     bool ok;
     Troop *troop = m_dataSource->dataItems(m_team).at(index.row());
@@ -80,7 +75,7 @@ bool TableModel2::setData(const QModelIndex &index, const QVariant &value, int r
         }
         if(troop->statList().at(index.column())!=json){
             troop->setStatList(index.column(),json);
-            emit dataChanged(index,index, {role, trNameRole,trHpRole,trActiveRole});
+            emit dataChanged(index,index, {role, trNameRole,trHpRole,trActiveRole,trRowRole,trColRole});
             //emit troopChaged();
             return true;
         }
@@ -143,7 +138,6 @@ QHash<int, QByteArray> TableModel2::roleNames() const
     roles[trMovedRole]="moved";
     roles[trHpRole]="hp";
     roles[trActiveRole]="active";
-
     return roles;
 }
 
@@ -160,8 +154,6 @@ QStringList TableModel2::findEnemy(int row, int col, int range, bool team) const
     }
     return enemy;
 }
-
-
 DataSource *TableModel2::dataSource() const
 {
     return m_dataSource;

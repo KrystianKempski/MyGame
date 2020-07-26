@@ -99,6 +99,7 @@ ApplicationWindow {
             property bool changed2: false
             property int pageNum: 1
             anchors.fill: parent
+
             Page1 {
                 widthProp: parent.width
                 heightProp: parent.height

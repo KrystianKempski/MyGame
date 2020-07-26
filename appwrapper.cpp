@@ -21,6 +21,7 @@ void AppWrapper::initialize()
  //   connect(&m_gameLogic,&GameLogic::dataChanged,ds,&DataSource::changeItem);
     connect(&m_gameLogic,&GameLogic::dataChanged,&m_troopModelRed,&TableModel2::updateAll);
     connect(&m_gameLogic,&GameLogic::dataChanged,&m_troopModelBlue,&TableModelBlue::updateModel);
+
     m_engine.rootContext()->setContextProperty("troopModelBlue",&m_troopModelBlue);
     m_engine.rootContext()->setContextProperty("troopModelRed",&m_troopModelRed);
      m_engine.rootContext()->setContextProperty("gamelogic",&m_gameLogic);
