@@ -70,6 +70,7 @@ private:
     //bool m_cells[10][10];
     QVector<bool> *m_tokenIn;
     QVector<QString> *m_cellColor;
+    QString m_consoleLine;
     QString m_console;
     int m_dataUpdate=0;
     QTimer* m_refresh;

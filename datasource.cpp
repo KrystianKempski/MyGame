@@ -86,10 +86,12 @@ void DataSource::changeItem()
     QJsonArray postArray;
     postArray.append(troopObject);
     QJsonObject data1;
+    data1.insert("posts",postArray);
     m_dataUpdate++;
     QJsonValue dataUpdate(m_dataUpdate);
-    data1.insert("posts",postArray);
     data1.insert("dataUpdate",dataUpdate);
+    QJsonValue consoleLine(m_consoleLine);
+    data1.insert("consoleLine",consoleLine);
     QJsonDocument doc(data1);
     QByteArray jsonData= doc.toJson();
     m_NetReply=m_netManager->put(request,jsonData);
@@ -106,10 +108,14 @@ void DataSource::readFinished()
         QJsonDocument doc = QJsonDocument::fromJson(*m_dataBuffer);
         QJsonObject data1 =doc.object();
         QJsonValue dataUpdate = data1["dataUpdate"];
-        qInfo() << m_dataUpdate;
-        qInfo() << dataUpdate.toInt();
+
         if(dataUpdate.toInt()!=m_dataUpdate) {
             m_dataUpdate=dataUpdate.toInt();
+            QJsonValue consoleLine = data1["consoleLine"];
+            m_consoleLine=consoleLine.toString();
+            qInfo() <<"ass" << consoleLine;
+            m_console=m_console+m_consoleLine;
+            qInfo() <<"ass" << m_console;
             QJsonArray postsArray = data1["posts"].toArray();
             QJsonObject troopsObject = postsArray.at(0).toObject();
             QJsonArray troopsArray;
@@ -150,14 +156,10 @@ void DataSource::readFinished()
                 QJsonValue blank3 = object["BLANK3"];
 
                 if(i>=dataItems(true).size()+dataItems(false).size()){
-                    qInfo() << "robie nowe " << i;
                     troop = new Troop(this);
                 }else{
-                    qInfo() << "podmieniam red: "<< troopRedIndex << "blue: "<<troopBlueIndex;
                   troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
-                   // team.toBool() ? troopRedIndex++ : troopBlueIndex++;
                 }
-
                 troop->setStatList(0,name);
                 troop->setStatList(1,type);
                 troop->setStatList(2,hp);
@@ -249,12 +251,11 @@ void DataSource::setCellColor(int row, int col, QString val)
 
 void DataSource::writeConsole(QString console)
 {
-    if (m_console == console)
-        return;
 
-    m_console = m_console + "\r\n" + console;
+    m_consoleLine = console + "\r\n";
+    m_console=m_console+ "\r\n"+console;
 
-    emit consoleChanged(m_console);
+    //emit consoleChanged(m_console);
 
 }
 

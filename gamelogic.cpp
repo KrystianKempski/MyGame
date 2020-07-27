@@ -58,16 +58,15 @@ void GameLogic::attack(int attacker, QString attacked,bool team)
                 if(hp<=dmgDealt){
                     m_dataSource->writeConsole(attacked+" zniszczona!");
                     QJsonValue jsonAct(false);
-                    m_dataSource->dataItems(!team).at(i)->setStatList(23,jsonAct);
+                    m_dataSource->dataItems(!team).at(i)->setStatList(23,jsonAct);                  //zmiana statusu jednostki na nieaktywny
                     emit dataChanged();
                 }
                 QJsonValue jsonDmg(hp-dmgDealt);
-                m_dataSource->dataItems(!team).at(i)->setStatList(2,jsonDmg);
+                m_dataSource->dataItems(!team).at(i)->setStatList(2,jsonDmg);                       //zmiana hp jednostyki
                 emit dataChanged();
                 return;
             }else {
                 m_dataSource->writeConsole(attackerName+ " pudłuje: " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence));
-                qInfo() << "pudło";
             }
         }
     }
