@@ -30,8 +30,9 @@ Rectangle {
 
 
     Component.onCompleted: {
-        battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
+        //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
        // troopModelRed.findEnemy(trRow,trCol,2,false)
+        battleModel2.cellAvalible(model.rowTr,model.colTr,true)
     }
 
     //onTroopExistsChanged: battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
@@ -67,7 +68,7 @@ Rectangle {
             y:1
             color: "red"
             height: parent.height -2
-            width: parent.width-parent.width*barProgress
+            width: barProgress>0? parent.width-parent.width*barProgress :parent.width
         }
         Text {
             id: hpValue
@@ -107,7 +108,8 @@ Rectangle {
             token.z=1
             battleModel2.colorCells(model.rowTr,model.colTr,model.speed,0,model.moved)              //pomalowanie kafelków na przezroczyste
             if(temp!== null){
-                battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)         //odznaczenie kafelka jako wolny
+                //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)         //odznaczenie kafelka jako wolny
+                battleModel2.cellAvalible(model.rowTr,model.colTr,false)
                 model.rowTr=token.y/size
                 model.colTr=token.x/size
                 model.moved=1                                                                           //zaznaczanie że oddział się ruszył

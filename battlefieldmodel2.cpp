@@ -44,7 +44,7 @@ bool BattlefieldModel2::setData(const QModelIndex &index, const QVariant &value,
     if (data(index, role) != value) {
         if(role==cellTokenInRole){
             m_dataSource->setTokenIn(index.row(),index.column(),value.toBool());
-            emit dataChanged(index,index, QVector<int>() << role);
+            emit dataChanged(index,index, {role, cellColorRole});
             return true;
         }else if(role==cellColorRole){
             m_dataSource->setCellColor(index.row(),index.column(),value.toString());
@@ -116,6 +116,14 @@ void BattlefieldModel2::colorCells(int row, int col, int speed, int color,int mo
         jZ=-speed;
         iZ++;
     }
+}
+
+void BattlefieldModel2::cellAvalible(short row, short col, bool aval)
+{
+   // QModelIndex index = createIndex(row,col);
+    //setData(index,aval,cellTokenInRole);
+    m_dataSource->setTokenIn(row,col,aval);
+
 }
 
 void BattlefieldModel2::updateModel()

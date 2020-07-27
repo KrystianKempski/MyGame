@@ -36,11 +36,11 @@ DataSource::DataSource(QObject *parent) : QObject(parent)
     statNames.insert(23,"ACTIVE");
     statNames.insert(24,"MAX_HP");
     statNames.insert(25,"BLANK3");
-
-    
-
     m_cellColor = new QVector<QString>(m_cellRows*m_cellColumns,"transparent");
     m_tokenIn = new QVector<bool>(m_cellRows*m_cellColumns,false);
+    m_refresh = new QTimer(this);
+    connect(m_refresh, &QTimer::timeout,this,&DataSource::fetchTroops);
+    //m_refresh->start(2000);
 
 }
 
@@ -86,7 +86,10 @@ void DataSource::changeItem()
     QJsonArray postArray;
     postArray.append(troopObject);
     QJsonObject data1;
+    m_dataUpdate++;
+    QJsonValue dataUpdate(m_dataUpdate);
     data1.insert("posts",postArray);
+    data1.insert("dataUpdate",dataUpdate);
     QJsonDocument doc(data1);
     QByteArray jsonData= doc.toJson();
     m_NetReply=m_netManager->put(request,jsonData);
@@ -102,83 +105,102 @@ void DataSource::readFinished()
         //turn data into troop stats values
         QJsonDocument doc = QJsonDocument::fromJson(*m_dataBuffer);
         QJsonObject data1 =doc.object();
-        // qInfo() << data1;
-        QJsonArray postsArray = data1["posts"].toArray();
-        QJsonObject troopsObject = postsArray.at(0).toObject();
-        QJsonArray troopsArray;
-        troopsArray = troopsObject["troops"].toArray();
-        for(int i=0;i<troopsArray.size();i++){
-            QJsonObject object = troopsArray.at(i).toObject();
+        QJsonValue dataUpdate = data1["dataUpdate"];
+        qInfo() << m_dataUpdate;
+        qInfo() << dataUpdate.toInt();
+        if(dataUpdate.toInt()!=m_dataUpdate) {
+            m_dataUpdate=dataUpdate.toInt();
+            QJsonArray postsArray = data1["posts"].toArray();
+            QJsonObject troopsObject = postsArray.at(0).toObject();
+            QJsonArray troopsArray;
+            troopsArray = troopsObject["troops"].toArray();
+            int troopRedIndex=0;
+            int troopBlueIndex=0;
+            m_tokenIn->fill(false); //  new QVector<bool>(m_cellRows*m_cellColumns,false);
+            for(int i=0;i<troopsArray.size();i++){
 
-            QJsonValue name = object["NAME"];
-            QJsonValue type = object["TYPE"];
-            QJsonValue hp = object["HP"];
-            QJsonValue aVal = object["A_VAL"];
-            QJsonValue def = object["DEF"];
-            QJsonValue dDice = object["D_DICE"];
-            QJsonValue dmg = object["DMG"];
-            QJsonValue aType = object["A_TYPE"];
-            QJsonValue speed = object["SPEED"];
-            QJsonValue aCharge = object["A_CHARGE"];
-            QJsonValue aCrowd = object["A_CROWD"];
-            QJsonValue morale = object["MORALE"];
-            QJsonValue range = object["RANGE"] ;
-            QJsonValue str = object["STR"];
-            QJsonValue agi = object["AGI"] ;
-            QJsonValue end = object["END"];
-            QJsonValue will = object["WILL"] ;
-            QJsonValue row = object["ROW"] ;
-            QJsonValue col = object["COL"] ;
-            QJsonValue id = object["T_ID"];
-            QJsonValue team = object["TEAM"];
-            QJsonValue moved = object["MOVED"];
-            QJsonValue attacked = object["ATTACKED"];
-            QJsonValue active = object["ACTIVE"];
-            QJsonValue maxHp = object["MAX_HP"];
-            QJsonValue blank3 = object["BLANK3"];
-            Troop *troop = new Troop(this);
-            troop->setStatList(0,name);
-            troop->setStatList(1,type);
-            troop->setStatList(2,hp);
-            troop->setStatList(3,aVal);
-            troop->setStatList(4,def);
-            troop->setStatList(5,dDice);
-            troop->setStatList(6,dmg);
-            troop->setStatList(7,aType);
-            troop->setStatList(8,speed);
-            troop->setStatList(9,aCharge);
-            troop->setStatList(10,aCrowd);
-            troop->setStatList(11,morale);
-            troop->setStatList(12,range);
-            troop->setStatList(13,str);
-            troop->setStatList(14,agi);
-            troop->setStatList(15,end);
-            troop->setStatList(16,will);
-            troop->setStatList(17,row);
-            troop->setStatList(18,col);
-            troop->setStatList(19,id);
-            troop->setStatList(20,team);
-            troop->setStatList(21,moved);
-            troop->setStatList(22,attacked);
-            troop->setStatList(23,active);
-            troop->setStatList(24,maxHp);
-            troop->setStatList(25,blank3);
-            //   troop->read();
-            //            bool teamRed=false;
-            //            if(troop->statList().at(20).toBool()) teamRed=true;
-            addTroop(troop,troop->statList().at(20).toBool());
+                 Troop *troop;
+                QJsonObject object = troopsArray.at(i).toObject();
+
+                QJsonValue name = object["NAME"];
+                QJsonValue type = object["TYPE"];
+                QJsonValue hp = object["HP"];
+                QJsonValue aVal = object["A_VAL"];
+                QJsonValue def = object["DEF"];
+                QJsonValue dDice = object["D_DICE"];
+                QJsonValue dmg = object["DMG"];
+                QJsonValue aType = object["A_TYPE"];
+                QJsonValue speed = object["SPEED"];
+                QJsonValue aCharge = object["A_CHARGE"];
+                QJsonValue aCrowd = object["A_CROWD"];
+                QJsonValue morale = object["MORALE"];
+                QJsonValue range = object["RANGE"] ;
+                QJsonValue str = object["STR"];
+                QJsonValue agi = object["AGI"] ;
+                QJsonValue end = object["END"];
+                QJsonValue will = object["WILL"] ;
+                QJsonValue row = object["ROW"] ;
+                QJsonValue col = object["COL"] ;
+                QJsonValue id = object["T_ID"];
+                QJsonValue team = object["TEAM"];
+                QJsonValue moved = object["MOVED"];
+                QJsonValue attacked = object["ATTACKED"];
+                QJsonValue active = object["ACTIVE"];
+                QJsonValue maxHp = object["MAX_HP"];
+                QJsonValue blank3 = object["BLANK3"];
+
+                if(i>=dataItems(true).size()+dataItems(false).size()){
+                    qInfo() << "robie nowe " << i;
+                    troop = new Troop(this);
+                }else{
+                    qInfo() << "podmieniam red: "<< troopRedIndex << "blue: "<<troopBlueIndex;
+                  troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
+                   // team.toBool() ? troopRedIndex++ : troopBlueIndex++;
+                }
+
+                troop->setStatList(0,name);
+                troop->setStatList(1,type);
+                troop->setStatList(2,hp);
+                troop->setStatList(3,aVal);
+                troop->setStatList(4,def);
+                troop->setStatList(5,dDice);
+                troop->setStatList(6,dmg);
+                troop->setStatList(7,aType);
+                troop->setStatList(8,speed);
+                troop->setStatList(9,aCharge);
+                troop->setStatList(10,aCrowd);
+                troop->setStatList(11,morale);
+                troop->setStatList(12,range);
+                troop->setStatList(13,str);
+                troop->setStatList(14,agi);
+                troop->setStatList(15,end);
+                troop->setStatList(16,will);
+                troop->setStatList(17,row);
+                troop->setStatList(18,col);
+                troop->setStatList(19,id);
+                troop->setStatList(20,team);
+                troop->setStatList(21,moved);
+                troop->setStatList(22,attacked);
+                troop->setStatList(23,active);
+                troop->setStatList(24,maxHp);
+                troop->setStatList(25,blank3);
+                setTokenIn(row.toInt(),col.toInt(),true);
+                if(i>=dataItems(true).size()+dataItems(false).size()) addTroop(troop,team.toBool());      //dodawanie oddziału do drużyn
+            }
+            m_dataBuffer->clear();
+            //  writeConsole("pobrano jednostki");
+            emit troopChanged();
+            qInfo() << "readFinnished";
         }
-        m_dataBuffer->clear();
     }else{
+        m_dataBuffer->clear();
         qInfo() << "ERROR";
         qInfo() << m_NetReply->errorString();
         writeConsole("Błąd! \r\n"+m_NetReply->errorString());
     }
-    writeConsole("pobrano jednostki");
-    qInfo() << "readFinnished";
+     m_dataBuffer->clear();
     m_netManager->clearConnectionCache();
     m_NetReply->close();
-
 }
 
 void DataSource::writeFinished()
@@ -199,12 +221,12 @@ bool DataSource::getTokenIn(int row, int column) const
     return m_tokenIn->at(m_cellRows*row+column);
 }
 
-int DataSource::getCellRowCount() const
+short DataSource::getCellRowCount() const
 {
     return m_cellRows;
 }
 
-int DataSource::getCellColumnCount() const
+short DataSource::getCellColumnCount() const
 {
     return m_cellColumns;
 }
@@ -246,11 +268,6 @@ void DataSource::dataReadyRead()
 {
     m_dataBuffer->append(m_NetReply->readAll());
 }
-
-
-
-
-
 
 void DataSource::addTroopRow()
 {

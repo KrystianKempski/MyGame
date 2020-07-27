@@ -35,7 +35,6 @@ void GameLogic::attack(int attacker, QString attacked,bool team)
     short attacks = m_dataSource->dataItems(team).at(attacker)->statList().at(22).toInt();     //pobranie liczby ataków atakującego
     if(attacks==0) {
         m_dataSource->writeConsole("brak możliwości ataku");
-        qInfo() << "brak możliwości ataku";
         return;
     }
     short attackValue = m_dataSource->dataItems(team).at(attacker)->statList().at(3).toInt();       //pobieranie wartości ataku

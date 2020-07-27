@@ -32,6 +32,7 @@ public:
 
     void setDataSource(DataSource * dataSource);
     Q_INVOKABLE void colorCells(int row,int col, int speed,int color,int moved);
+     Q_INVOKABLE void cellAvalible(short row,short col, bool aval);
     Q_INVOKABLE void updateModel();
 private:
     DataSource  *m_dataSource;

@@ -12,7 +12,6 @@ ApplicationWindow {
     width: 1140
     height: 650
     title: qsTr("Hello World")
-   // Component.onCompleted:  gamelogic.startGame()
 
     FileDialog{
         id: openDialog
@@ -121,5 +120,4 @@ ApplicationWindow {
                 visible: parent.pageNum===4
             }
         }
-
 }

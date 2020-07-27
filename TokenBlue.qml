@@ -27,14 +27,10 @@ Rectangle {
     radius: size
     y: b_rowX
     x: b_columnX
-
-
     Component.onCompleted: {
-        battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
-        //console.log( barProgress)
+        //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
+        battleModel2.cellAvalible(model.rowTr,model.colTr,true)
     }
-
-
     color: "blue"
     Drag.keys: [ colorKey ]
     Drag.active: mouseArea.drag.active
@@ -67,7 +63,7 @@ Rectangle {
             y:1
             color: "red"
             height: parent.height -2
-            width: parent.width-parent.width*barProgress
+            width: barProgress>0? parent.width-parent.width*barProgress :parent.width
         }
         Text {
             id: hpValue
@@ -107,7 +103,8 @@ Rectangle {
             token.z=1
             battleModel2.colorCells(model.rowTr,model.colTr,model.speed,0,model.moved)              //pomalowanie kafelków na przezroczyste
             if(temp!== null){
-                battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)         //odznaczenie kafelka jako wolny
+                //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)         //odznaczenie kafelka jako wolny
+                battleModel2.cellAvalible(model.rowTr,model.colTr,false)
                 model.rowTr=token.y/size
                 model.colTr=token.x/size
                 model.moved=1                                                                           //zaznaczanie że oddział się ruszył
@@ -118,13 +115,10 @@ Rectangle {
     states: State {
         when: troopExists==false
         onCompleted:  {
-            //  console.log(model.rowTr)
            battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
            model.colTr=9
            model.rowTr=9
-
-
-        }
+   }
     }
     Menu{
         id: actionMenu

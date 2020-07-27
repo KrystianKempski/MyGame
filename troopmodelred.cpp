@@ -192,6 +192,11 @@ void TableModel2::updateAll()
     emit endResetModel();           //resetuje model
     emit troopChaged();             //resetuje plik json na serwerze
 }
+void TableModel2::updateModel()
+{
+    emit beginResetModel();
+    emit endResetModel();           //resetuje model
+}
 
 void TableModel2::updateServer()
 {

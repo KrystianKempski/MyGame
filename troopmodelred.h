@@ -45,6 +45,7 @@ signals:
     void troopChaged();
 public slots:
    Q_INVOKABLE void updateAll();
+     Q_INVOKABLE void updateModel();
     Q_INVOKABLE void updateServer();
 
 private:

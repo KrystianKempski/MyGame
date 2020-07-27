@@ -10,7 +10,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "troop.h"
-static const QUrl m_apiEndpoint("https://api.jsonbin.io/b/5f195325c1edc466175cb957");
+#include <QTimer>
+
+static const QUrl m_apiEndpoint("https://api.jsonbin.io/b/5f1ed239c58dc34bf5dbac22");
 class DataSource : public QObject
 {
     Q_OBJECT
@@ -28,8 +30,8 @@ public:
    // Q_INVOKABLE void removeTroop(int index);
     Q_INVOKABLE QString getCellColor(int row, int column) const;
     Q_INVOKABLE bool getTokenIn(int row, int column) const;
-    int getCellRowCount() const;
-    int getCellColumnCount() const;
+    Q_INVOKABLE short getCellRowCount() const;
+    Q_INVOKABLE short getCellColumnCount() const;
     void initialize();
     QString readConsole() const;
 
@@ -41,12 +43,13 @@ signals:
     void preRemoveTroop(int index);
     void postRemoveTroop();
     void tokenIn(int row,int col,bool val);
+    Q_INVOKABLE void troopChanged();
     Q_INVOKABLE void consoleChanged(QString readConsole);
 
 private slots:
     void dataReadyRead();
     void readFinished();
-    void writeFinished();;
+    void writeFinished();
 public slots:
     Q_INVOKABLE void changeItem();
     Q_INVOKABLE void setTokenIn(int row, int column, bool val);
@@ -62,12 +65,14 @@ private:
     QList<Troop*>  m_troopsRed;
     QList<Troop*>  m_troopsBlue;
     QHash<int,QString> statNames;
-    int m_cellRows=10;
-    int m_cellColumns=10;
+    int m_cellRows=15;
+    int m_cellColumns=15;
     //bool m_cells[10][10];
     QVector<bool> *m_tokenIn;
     QVector<QString> *m_cellColor;
     QString m_console;
+    int m_dataUpdate=0;
+    QTimer* m_refresh;
 
 };
 

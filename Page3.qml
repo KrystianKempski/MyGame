@@ -47,22 +47,29 @@ Page {
                 width: parent.width-10
                 height: 200
                 radius: 5
-                //width: parent.width-10
-                // height: parent.height-200
-                //width: parent.width-10
                 color: "white"
                 Flickable {
                     id: flickable
                     anchors.fill: parent
-
+                    contentWidth: parent.width
+                    contentHeight: 500
+                    flickableDirection: Flickable.VerticalFlick
+                    clip: true
+                    onContentHeightChanged: Qt.callLater(() => contentY = contentHeight - height)
                     TextArea.flickable: TextArea {
+                        id:txtConsole
                         font.pixelSize: 12
+                        width: parent.width
+                        height: 200
                         color:  "black"
-                        readOnly: true
-                        text: dataSource.readConsole
                         wrapMode: TextArea.Wrap
-                    }
+                        text:dataSource.readConsole
 
+                        onTextChanged: {
+                            flickable.contentY = txtConsole.height - flickable.height
+                        }
+                    }
+                    contentY: contentHeight-height
                     ScrollBar.vertical: ScrollBar { }
                 }
             }
@@ -95,10 +102,9 @@ Page {
             }
             TableView {
                 id: tableview
-                implicitHeight: cellSize*10
-                implicitWidth: cellSize*10
+                implicitHeight: cellSize*dataSource.getCellRowCount()
+                implicitWidth: cellSize*dataSource.getCellColumnCount()
                  clip: true
-
                 model: battleModel2
                 delegate: Cell { colorKey: "blue"; size: cellSize }
             }
@@ -115,6 +121,31 @@ Page {
                 delegate: TokenBlue { colorKey: "blue"; size: cellSize; editable: true}
             }
 
+        }
+
+    }
+    Rectangle {
+        id:rightToolBar
+        anchors.left: root.right
+        width: 200
+        height: parent.height
+        color: "grey"
+        Button {
+            anchors.bottom: btnReady.top
+            id: btnAddTroops
+            text: "add"
+            onClicked: {
+                dataSource.fetchTroops(true)
+            }
+        }
+        Button {
+            anchors.bottom: rightToolBar.bottom
+            id: btnReady
+            text: "Ready"
+            onClicked: {
+                gamelogic.playerReady(1)
+                gamelogic.nextTurn()
+            }
         }
 
     }

@@ -15,12 +15,13 @@ void AppWrapper::initialize()
     m_gameLogic.setDataSource(ds);
 
 
-    //connect(&m_battleModel,&BattlefieldModel2::dataChanged,ds,&DataSource::changeItem);
     connect(&m_troopModelRed,&TableModel2::troopChaged,ds,&DataSource::changeItem);
     connect(&m_troopModelBlue,&TableModelBlue::troopChaged,ds,&DataSource::changeItem);
- //   connect(&m_gameLogic,&GameLogic::dataChanged,ds,&DataSource::changeItem);
+    connect(ds,&DataSource::troopChanged,&m_battleModel,&BattlefieldModel2::updateModel);
     connect(&m_gameLogic,&GameLogic::dataChanged,&m_troopModelRed,&TableModel2::updateAll);
     connect(&m_gameLogic,&GameLogic::dataChanged,&m_troopModelBlue,&TableModelBlue::updateModel);
+    connect(ds,&DataSource::troopChanged,&m_troopModelRed,&TableModel2::updateModel);
+    connect(ds,&DataSource::troopChanged,&m_troopModelBlue,&TableModelBlue::updateModel);
 
     m_engine.rootContext()->setContextProperty("troopModelBlue",&m_troopModelBlue);
     m_engine.rootContext()->setContextProperty("troopModelRed",&m_troopModelRed);

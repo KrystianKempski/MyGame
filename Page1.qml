@@ -47,14 +47,10 @@ Page {
                 width: parent.width-10
                 height: 200
                 radius: 5
-                //width: parent.width-10
-                // height: parent.height-200
-                //width: parent.width-10
                 color: "white"
                 Flickable {
                     id: flickable
                     anchors.fill: parent
-
                     contentWidth: parent.width
                     contentHeight: 500
                     flickableDirection: Flickable.VerticalFlick
@@ -68,20 +64,14 @@ Page {
                         color:  "black"
                         wrapMode: TextArea.Wrap
                         text:dataSource.readConsole
-
                         onTextChanged: {
                             flickable.contentY = txtConsole.height - flickable.height
-                            console.log("OnTextChanged - contentY changed to: " + flickable.contentY)
                         }
                     }
-                    onContentYChanged: console.log(contentY)
-                    contentY: contentHeight-height//  20// txtConsole.height
-
+                    contentY: contentHeight-height
                     ScrollBar.vertical: ScrollBar { }
                 }
             }
-
-
         }
     }
     Item {
@@ -108,14 +98,10 @@ Page {
                 source: "qrc:/images/field.jpg"
             }
             TableView {
-
                 id: tableview
-                implicitHeight: cellSize*10
-                implicitWidth: cellSize*10
-
-                // anchors.fill: parent
+                implicitHeight: cellSize*dataSource.getCellRowCount()
+                implicitWidth: cellSize*dataSource.getCellColumnCount()
                 clip: true
-
                 model: battleModel2
                 delegate: Cell { colorKey: "red"; size: cellSize }
             }
@@ -130,9 +116,6 @@ Page {
                 model: troopModelRed
                 delegate: TokenRed { colorKey: "red"; size: cellSize; editable: true}
             }
-
-            //   }
-
         }
 
     }
@@ -149,8 +132,6 @@ Page {
             text: "add"
             onClicked: {
                 dataSource.fetchTroops(true)
-                // dataSource.writeConsole("pobrano jednostki\r\n")
-
             }
         }
         Button {
