@@ -23,7 +23,6 @@ Page {
         height: parent.height
         anchors.left: parent.left
         anchors.leftMargin: 0
-         Component.onCompleted: dataSource.writeConsole("nowa gra\r\n")
         Rectangle{
             x: 0
             y:0

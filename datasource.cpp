@@ -104,8 +104,8 @@ void DataSource::readFinished()
             m_dataUpdate=dataUpdate.toInt();
             QJsonValue consoleLine = data1["consoleLine"];
             if(0!=dataItems(true).size()+dataItems(false).size()) {
-                m_consoleLine=consoleLine.toString();
-                m_console=m_console+m_consoleLine;
+                writeConsole( m_consoleLine=consoleLine.toString());
+                m_console+m_consoleLine;
             }
             QJsonArray postsArray = data1["posts"].toArray();
             QJsonObject troopsObject = postsArray.at(0).toObject();
