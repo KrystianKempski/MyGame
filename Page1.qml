@@ -22,6 +22,7 @@ Page {
         height: parent.height
         anchors.left: parent.left
         anchors.leftMargin: 0
+        Component.onCompleted: dataSource.writeConsole("nowa gra\r\n")
         // spacing: -1
         Rectangle{
             x: 0
@@ -63,7 +64,7 @@ Page {
                         height: 200
                         color:  "black"
                         wrapMode: TextArea.Wrap
-                        text:dataSource.readConsole
+                        text: dataSource.readConsole
                         onTextChanged: {
                             flickable.contentY = txtConsole.height - flickable.height
                         }
@@ -87,10 +88,8 @@ Page {
             clip: true
             contentWidth: image.width
             contentHeight: image.height
-
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-
             Image {
                 id: image
                 width: 1000
@@ -105,10 +104,7 @@ Page {
                 model: battleModel2
                 delegate: Cell { colorKey: "red"; size: cellSize }
             }
-
-
             Repeater {
-
                 model: troopModelBlue
                 delegate: TokenBlue{ colorKey: "blue"; size: cellSize; editable: false}
             } Repeater {

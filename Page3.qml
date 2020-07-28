@@ -16,13 +16,14 @@ Page {
     height: heightProp
     title: qsTr("Hello World")
     property int cellSize: 64
-    Column{
+
+    Item {
         id: leftToolbar
         width: 200
         height: parent.height
         anchors.left: parent.left
         anchors.leftMargin: 0
-        spacing: -1
+         Component.onCompleted: dataSource.writeConsole("nowa gra\r\n")
         Rectangle{
             x: 0
             y:0

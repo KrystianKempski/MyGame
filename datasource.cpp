@@ -41,14 +41,9 @@ DataSource::DataSource(QObject *parent) : QObject(parent)
     m_refresh = new QTimer(this);
     connect(m_refresh, &QTimer::timeout,this,&DataSource::fetchTroops);
     //m_refresh->start(2000);
-
 }
-
 void DataSource::fetchTroops()
 {
-    // const QUrl m_apiEndpoint("https://api.jsonbin.io/b/5f103074918061662842a56c");
-    // const QUrl API_ENDPOINT("http://localhost:3000");
-    //const QUrl API_ENDPOINT("http://localhost:3000/posts");
     QNetworkRequest request;
     request.setUrl(m_apiEndpoint);
     request.setRawHeader("versioning","false");
@@ -57,10 +52,8 @@ void DataSource::fetchTroops()
     connect(m_NetReply,&QIODevice::readyRead,this,&DataSource::dataReadyRead);
     connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::readFinished);
 }
-
 void DataSource::changeItem()
 {
-    //const QUrl API_ENDPOINT("https://api.jsonbin.io/b/5ef8834b0bab551d2b681263");
     QNetworkRequest request;
     request.setUrl(m_apiEndpoint);
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
@@ -100,7 +93,6 @@ void DataSource::changeItem()
         qInfo() <<"błąd w changeItem" +m_NetReply->errorString();
     connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::writeFinished);
 }
-
 void DataSource::readFinished()
 {
     if(!m_NetReply->error()){
@@ -108,26 +100,23 @@ void DataSource::readFinished()
         QJsonDocument doc = QJsonDocument::fromJson(*m_dataBuffer);
         QJsonObject data1 =doc.object();
         QJsonValue dataUpdate = data1["dataUpdate"];
-
         if(dataUpdate.toInt()!=m_dataUpdate) {
             m_dataUpdate=dataUpdate.toInt();
             QJsonValue consoleLine = data1["consoleLine"];
-            m_consoleLine=consoleLine.toString();
-            qInfo() <<"ass" << consoleLine;
-            m_console=m_console+m_consoleLine;
-            qInfo() <<"ass" << m_console;
+            if(0!=dataItems(true).size()+dataItems(false).size()) {
+                m_consoleLine=consoleLine.toString();
+                m_console=m_console+m_consoleLine;
+            }
             QJsonArray postsArray = data1["posts"].toArray();
             QJsonObject troopsObject = postsArray.at(0).toObject();
             QJsonArray troopsArray;
             troopsArray = troopsObject["troops"].toArray();
             int troopRedIndex=0;
             int troopBlueIndex=0;
-            m_tokenIn->fill(false); //  new QVector<bool>(m_cellRows*m_cellColumns,false);
+            m_tokenIn->fill(false); //
             for(int i=0;i<troopsArray.size();i++){
-
-                 Troop *troop;
+                Troop *troop;
                 QJsonObject object = troopsArray.at(i).toObject();
-
                 QJsonValue name = object["NAME"];
                 QJsonValue type = object["TYPE"];
                 QJsonValue hp = object["HP"];
@@ -154,11 +143,10 @@ void DataSource::readFinished()
                 QJsonValue active = object["ACTIVE"];
                 QJsonValue maxHp = object["MAX_HP"];
                 QJsonValue blank3 = object["BLANK3"];
-
                 if(i>=dataItems(true).size()+dataItems(false).size()){
                     troop = new Troop(this);
                 }else{
-                  troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
+                    troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
                 }
                 troop->setStatList(0,name);
                 troop->setStatList(1,type);
@@ -200,7 +188,7 @@ void DataSource::readFinished()
         qInfo() << m_NetReply->errorString();
         writeConsole("Błąd! \r\n"+m_NetReply->errorString());
     }
-     m_dataBuffer->clear();
+    m_dataBuffer->clear();
     m_netManager->clearConnectionCache();
     m_NetReply->close();
 }
@@ -255,7 +243,7 @@ void DataSource::writeConsole(QString console)
     m_consoleLine = console + "\r\n";
     m_console=m_console+ "\r\n"+console;
 
-    //emit consoleChanged(m_console);
+    emit consoleChanged(m_console);
 
 }
 
