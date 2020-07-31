@@ -7,35 +7,6 @@ DataSource::DataSource(QObject *parent) : QObject(parent)
     m_NetReply =nullptr;
     m_dataBuffer = new QByteArray;
     m_console = "";
-
-    statNames.insert(0,"NAME");
-    statNames.insert(1,"TYPE");
-    statNames.insert(2,"HP");
-    statNames.insert(3,"A_VAL");
-    statNames.insert(4,"DEF");
-    statNames.insert(5,"D_DICE");
-    statNames.insert(6,"DMG");
-    statNames.insert(7,"A_TYPE");
-    statNames.insert(8,"SPEED");
-    statNames.insert(9,"A_CHARGE");
-    statNames.insert(10,"A_CROWD");
-    statNames.insert(11,"MORALE");
-    statNames.insert(12,"RANGE") ;
-    statNames.insert(13,"STR");
-    statNames.insert(14,"AGI") ;
-    statNames.insert(15,"END");
-    statNames.insert(16,"WILL") ;
-    //parametry niewidoczne
-
-    statNames.insert(17,"ROW") ;
-    statNames.insert(18,"COL") ;
-    statNames.insert(19,"T_ID");
-    statNames.insert(20,"TEAM");
-    statNames.insert(21,"MOVED");
-    statNames.insert(22,"ATTACKED");
-    statNames.insert(23,"ACTIVE");
-    statNames.insert(24,"MAX_HP");
-    statNames.insert(25,"BLANK3");
     m_cellColor = new QVector<QString>(m_cellRows*m_cellColumns,"transparent");
     m_tokenIn = new QVector<bool>(m_cellRows*m_cellColumns,false);
     m_refresh = new QTimer(this);
@@ -46,9 +17,12 @@ void DataSource::fetchTroops()
 {
     QNetworkRequest request;
     request.setUrl(m_apiEndpoint);
-    request.setRawHeader("versioning","false");
+    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
     request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
+    request.setRawHeader("versioning","false");
+  //  request.setRawHeader("key","AIzaSyBNOuhCUeadaiSwvWCvtdGQ-vziKqNSavM");
     m_NetReply=m_netManager->sendCustomRequest(request,"GET");
+  //    qInfo() << m_NetReply->readAll();
     connect(m_NetReply,&QIODevice::readyRead,this,&DataSource::dataReadyRead);
     connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::readFinished);
 }
@@ -57,8 +31,9 @@ void DataSource::changeItem()
     QNetworkRequest request;
     request.setUrl(m_apiEndpoint);
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-    request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
+   request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
     request.setRawHeader("versioning","false");
+   // request.setRawHeader("key","AIzaSyBNOuhCUeadaiSwvWCvtdGQ-vziKqNSavM");
     //  QJsonArray array;
     QJsonArray troopsArray;
     for(int i=0;i<m_troopsRed.size();i++){
@@ -85,10 +60,13 @@ void DataSource::changeItem()
     data1.insert("dataUpdate",dataUpdate);
     QJsonValue consoleLine(m_consoleLine);
     data1.insert("consoleLine",consoleLine);
+    QJsonValue chatLine(m_chatLine);
+    data1.insert("chatLine",chatLine);
     QJsonDocument doc(data1);
     QByteArray jsonData= doc.toJson();
-    m_NetReply=m_netManager->put(request,jsonData);
-
+    //m_NetReply=m_netManager->put(request,jsonData);
+    m_NetReply=m_netManager->sendCustomRequest(request,"PUT",jsonData);
+   // qInfo() << m_NetReply;
     if(m_NetReply->error())
         qInfo() <<"błąd w changeItem" +m_NetReply->errorString();
     connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::writeFinished);
@@ -98,14 +76,16 @@ void DataSource::readFinished()
     if(!m_NetReply->error()){
         //turn data into troop stats values
         QJsonDocument doc = QJsonDocument::fromJson(*m_dataBuffer);
+       // qInfo() << *m_dataBuffer;
         QJsonObject data1 =doc.object();
         QJsonValue dataUpdate = data1["dataUpdate"];
-        if(dataUpdate.toInt()!=m_dataUpdate) {
+        if(dataUpdate.toInt()!=m_dataUpdate) {                          //sprawdzanie czy zaszły zmiany na serwerze
             m_dataUpdate=dataUpdate.toInt();
             QJsonValue consoleLine = data1["consoleLine"];
+            QJsonValue chatLine = data1["chatLine"];
             if(0!=dataItems(true).size()+dataItems(false).size()) {
-                writeConsole( m_consoleLine=consoleLine.toString());
-                m_console+m_consoleLine;
+                writeConsole(consoleLine.toString());
+                writeChat(chatLine.toString());
             }
             QJsonArray postsArray = data1["posts"].toArray();
             QJsonObject troopsObject = postsArray.at(0).toObject();
@@ -139,7 +119,7 @@ void DataSource::readFinished()
                 QJsonValue id = object["T_ID"];
                 QJsonValue team = object["TEAM"];
                 QJsonValue moved = object["MOVED"];
-                QJsonValue attacked = object["ATTACKED"];
+                QJsonValue attacked = object["ATTACKS"];
                 QJsonValue active = object["ACTIVE"];
                 QJsonValue maxHp = object["MAX_HP"];
                 QJsonValue blank3 = object["BLANK3"];
@@ -191,6 +171,8 @@ void DataSource::readFinished()
     m_dataBuffer->clear();
     m_netManager->clearConnectionCache();
     m_NetReply->close();
+    m_NetReply->deleteLater();
+    m_NetReply = nullptr;
 }
 
 void DataSource::writeFinished()
@@ -198,6 +180,8 @@ void DataSource::writeFinished()
     qInfo() << "writeFinished";
     m_netManager->clearConnectionCache();
     m_NetReply->close();
+    m_NetReply->deleteLater();
+    m_NetReply = nullptr;
 }
 
 QString DataSource::getCellColor(int row, int col) const
@@ -226,6 +210,11 @@ QString DataSource::readConsole() const
     return m_console;
 }
 
+QString DataSource::readChat() const
+{
+    return m_chat;
+}
+
 void DataSource::setTokenIn(int row, int col, bool val)
 {
     m_tokenIn->replace(row*m_cellRows+col,val);
@@ -239,12 +228,19 @@ void DataSource::setCellColor(int row, int col, QString val)
 
 void DataSource::writeConsole(QString console)
 {
-
-    m_consoleLine = console + "\r\n";
+    if(m_consoleLine==console) return;
+    m_consoleLine = console;
     m_console=m_console+ "\r\n"+console;
-
     emit consoleChanged(m_console);
+}
 
+void DataSource::writeChat(QString chat)
+{
+    if(m_chatLine==chat) return;
+    m_chatLine=chat;
+    m_chat = m_chat + "\r\n" +chat;
+    emit chatChanged(m_chat);
+    changeItem();
 }
 
 

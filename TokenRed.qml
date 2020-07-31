@@ -12,15 +12,18 @@ Rectangle {
     property int trIndex: model.row
     property var troopName: model.name
     property var troopSpeed: model.speed
+    property var troopRange: model.range
+    property string troopIcon: "/images/"+model.type+".png"
     property int trRow: model.rowTr
     property int trCol: model.colTr
     property int b_rowX: model.rowTr*size
     property int b_columnX: model.colTr*size
     property int hp: model.hp
-    property bool troopExists:model.active//troopModelRed.data(troopModelRed.index(trIndex,23),258)          //check if troop is on battlefield
+    property bool troopExists:model.active                                                      //check if troop is on battlefield
     property double barProgress: hp/troopModelRed.data(troopModelRed.index(trIndex,24),258)
     property var temp
 
+    //if(troopType==="konnica")  troopType=1
     opacity: troopExists? 1 : 0.5
     implicitWidth: size
     implicitHeight: size
@@ -31,7 +34,7 @@ Rectangle {
 
     Component.onCompleted: {
         //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
-       // troopModelRed.findEnemy(trRow,trCol,2,false)
+        // troopModelRed.findEnemy(trRow,trCol,2,false)
         battleModel2.cellAvalible(model.rowTr,model.colTr,true)
     }
 
@@ -41,13 +44,21 @@ Rectangle {
     Drag.active: mouseArea.drag.active
     Drag.hotSpot.x: size/2
     Drag.hotSpot.y: size/2
+    Image {
+        id: icon
+        width: size/2
+        height: size/2
+        anchors.centerIn: parent
+        source: troopIcon
+    }
 
     Text {
 
         id: text1
-        anchors.fill: parent
-        color: "white"
-        font.pixelSize: 12
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        color: "black"
+        font.pixelSize: 14
         text: troopName
 
         horizontalAlignment:Text.AlignHCenter
@@ -84,7 +95,7 @@ Rectangle {
         acceptedButtons: Qt.AllButtons
         width: size-2; height: size-2
         anchors.centerIn: token
-        drag.target:  (mouseArea.pressedButtons &Qt.LeftButton) ? token: null
+        drag.target:  (mouseArea.pressedButtons &Qt.LeftButton)&& !model.moved ? token: null
         states: State {
             when: mouseArea.drag.active
             onCompleted:  {
@@ -108,11 +119,11 @@ Rectangle {
             token.z=1
             battleModel2.colorCells(model.rowTr,model.colTr,model.speed,0,model.moved)              //pomalowanie kafelków na przezroczyste
             if(temp!== null){
-                //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)         //odznaczenie kafelka jako wolny
-                battleModel2.cellAvalible(model.rowTr,model.colTr,false)
+                battleModel2.cellAvalible(model.rowTr,model.colTr,false)                              //odznaczenie kafelka jako wolny
                 model.rowTr=token.y/size
                 model.colTr=token.x/size
-                model.moved=1                                                                           //zaznaczanie że oddział się ruszył
+                model.moved=true                                                                           //zaznaczanie że oddział się ruszył
+                model.attacks=model.attacks-1
                 troopModelRed.updateAll()                                                             //update modelu i serwera
             }
         }
@@ -121,9 +132,9 @@ Rectangle {
         when: troopExists==false
         onCompleted:  {
             //  console.log(model.rowTr)
-           battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
-           model.colTr=9
-           model.rowTr=9
+            battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
+            model.colTr=9
+            model.rowTr=9
 
 
         }
@@ -133,7 +144,7 @@ Rectangle {
         Menu{
             title: "Atak"
             Repeater {
-                model: troopModelRed.findEnemy(trRow,trCol,1,false)
+                model: troopModelRed.findEnemy(trRow,trCol,troopRange,false)
                 MenuItem {
                     text: modelData
                     onClicked: gamelogic.attack(trIndex,modelData,team)

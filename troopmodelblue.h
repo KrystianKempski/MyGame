@@ -26,7 +26,14 @@ public:
         trMovedRole=Qt::UserRole+7,
         trUpdateRole=Qt::UserRole+8,
         trHpRole=Qt::UserRole+9,
-        trActiveRole=Qt::UserRole+10
+        trActiveRole=Qt::UserRole+10,
+        trRangeRole=Qt::UserRole+11,
+        trTypeRole=Qt::UserRole+12,
+        trAttacksRole=Qt::UserRole+13,
+        trAttackValRole=Qt::UserRole+14,
+        trDmgDiceRole=Qt::UserRole+15,
+        trDmgValRole=Qt::UserRole+16,
+        trDefenceRole=Qt::UserRole+17
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -46,7 +53,7 @@ signals:
 public slots:
     Q_INVOKABLE void updateAll();
     Q_INVOKABLE void updateServer();
-     Q_INVOKABLE void updateModel();
+    Q_INVOKABLE void updateModel();
 
 private:
     DataSource * m_dataSource;

@@ -92,29 +92,30 @@ ApplicationWindow {
         }
     }
         Item{
+            Component.onCompleted: dataSource.writeConsole("nowa gra\r\n")
             width: parent.width
             height: parent.height
             id: view
             property bool changed2: false
             property int pageNum: 1
             anchors.fill: parent
-            Component.onCompleted: dataSource.writeConsole("nowa gra\r\n")
-            Page1 {
+
+            BattlefieldRed {
                 widthProp: parent.width
                 heightProp: parent.height
                 visible: parent.pageNum===1
             }
-            Page2 {
+            TroopsRed {
                 widthProp: parent.width
                 heightProp: parent.height
                 visible: parent.pageNum===2
             }
-            Page3 {
+            BattlefieldBlue {
                 widthProp: parent.width
                 heightProp: parent.height
                 visible: parent.pageNum===3
             }
-            Page4 {
+            TroopsBlue {
                 widthProp: parent.width
                 heightProp: parent.height
                 visible: parent.pageNum===4

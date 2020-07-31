@@ -21,7 +21,8 @@ public:
     explicit DataSource(QObject *parent = nullptr);
     Q_INVOKABLE void fetchTroops();
     Q_INVOKABLE void addTroopRow();
-    Q_PROPERTY(QString readConsole READ readConsole WRITE writeConsole NOTIFY consoleChanged);
+    Q_PROPERTY(QString console READ readConsole WRITE writeConsole NOTIFY consoleChanged);
+    Q_PROPERTY(QString chat READ readChat WRITE writeChat NOTIFY chatChanged);
     // Q_INVOKABLE void removeLastTroop();
     QList<Troop*> dataItems(bool team) const;
     // Q_INVOKABLE void addTroop();
@@ -33,7 +34,8 @@ public:
     Q_INVOKABLE short getCellRowCount() const;
     Q_INVOKABLE short getCellColumnCount() const;
     void initialize();
-    QString readConsole() const;
+   QString readConsole() const;
+   QString readChat() const;
 
 signals:
     void preInsertTroopRed();
@@ -44,7 +46,8 @@ signals:
     void postRemoveTroop();
     void tokenIn(int row,int col,bool val);
     Q_INVOKABLE void troopChanged();
-    Q_INVOKABLE void consoleChanged(QString readConsole);
+    Q_INVOKABLE void consoleChanged(QString console);
+    void chatChanged(QString chat);
 
 private slots:
     void dataReadyRead();
@@ -54,27 +57,26 @@ public slots:
     Q_INVOKABLE void changeItem();
     Q_INVOKABLE void setTokenIn(int row, int column, bool val);
     Q_INVOKABLE void setCellColor(int row, int column, QString val);
-    void writeConsole(QString readConsole);
+    void writeConsole(QString console);
+    void writeChat(QString chat);
 
 private:
-    QByteArray updateData();
-
+   // QByteArray updateData();
     QNetworkAccessManager * m_netManager;
     QNetworkReply * m_NetReply;
     QByteArray * m_dataBuffer;
     QList<Troop*>  m_troopsRed;
     QList<Troop*>  m_troopsBlue;
-    QHash<int,QString> statNames;
     int m_cellRows=15;
     int m_cellColumns=15;
-    //bool m_cells[10][10];
     QVector<bool> *m_tokenIn;
     QVector<QString> *m_cellColor;
     QString m_consoleLine;
     QString m_console;
     int m_dataUpdate=0;
     QTimer* m_refresh;
-
+    QString m_chat;
+    QString m_chatLine;
 };
 
 #endif // DATASOURCE_H

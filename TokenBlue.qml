@@ -12,6 +12,8 @@ Rectangle {
     property int trIndex: model.row
     property var troopName: model.name
     property var troopSpeed: model.speed
+    property var troopRange: model.range
+    property string troopIcon: "/images/"+model.type+".png"
     property int trRow:  model.rowTr
     property int trCol: model.colTr
     property int b_rowX: model.rowTr*size
@@ -36,12 +38,20 @@ Rectangle {
     Drag.active: mouseArea.drag.active
     Drag.hotSpot.x: size/2
     Drag.hotSpot.y: size/2
+    Image {
+        id: icon
+        width: size/2
+        height: size/2
+        anchors.centerIn: parent
+        source: troopIcon
+    }
 
     Text {
 
         id: text1
-        anchors.fill: parent
-        color: "white"
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        color: "black"
         font.pixelSize: 12
         text: troopName
 
@@ -79,7 +89,7 @@ Rectangle {
         acceptedButtons: Qt.AllButtons
         width: size-2; height: size-2
         anchors.centerIn: token
-        drag.target:  (mouseArea.pressedButtons &Qt.LeftButton) ? token: null
+        drag.target:  (mouseArea.pressedButtons &Qt.LeftButton)& !model.moved ? token: null
         states: State {
             when: mouseArea.drag.active
             onCompleted:  {
@@ -103,11 +113,11 @@ Rectangle {
             token.z=1
             battleModel2.colorCells(model.rowTr,model.colTr,model.speed,0,model.moved)              //pomalowanie kafelków na przezroczyste
             if(temp!== null){
-                //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)         //odznaczenie kafelka jako wolny
-                battleModel2.cellAvalible(model.rowTr,model.colTr,false)
+                battleModel2.cellAvalible(model.rowTr,model.colTr,false)                              //odznaczenie kafelka jako wolny
                 model.rowTr=token.y/size
                 model.colTr=token.x/size
-                model.moved=1                                                                           //zaznaczanie że oddział się ruszył
+                model.moved=true                                                                           //zaznaczanie że oddział się ruszył
+                model.attacks=model.attacks-1
                 troopModelBlue.updateAll()                                                             //update modelu i serwera
             }
         }
@@ -125,7 +135,7 @@ Rectangle {
         Menu{
             title: "Atak"
             Repeater {
-                model: troopModelBlue.findEnemy(trRow,trCol,1,true)
+                model: troopModelBlue.findEnemy(trRow,trCol,troopRange,true)
                 MenuItem {
                     text: modelData
                     onClicked: gamelogic.attack(trIndex,modelData,team)

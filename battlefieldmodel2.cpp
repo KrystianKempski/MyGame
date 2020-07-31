@@ -79,11 +79,11 @@ void BattlefieldModel2::setDataSource(DataSource *dataSource)
 {
     m_dataSource = dataSource;
 }
-void BattlefieldModel2::colorCells(int row, int col, int speed, int color,int moved)
+void BattlefieldModel2::colorCells(int row, int col, int speed, int color,bool moved)
 {
     m_cellRows = m_dataSource->getCellRowCount();
     m_cellColumns =m_dataSource->getCellColumnCount();
-    if(moved==1) speed=0;
+    if(moved) return;
     short iZ=-speed;
     short jZ=-speed;
     for(short i=row-speed;i<=row+speed;i++){

@@ -29,34 +29,34 @@ void GameLogic::nextTurn()
     }
 }
 
-void GameLogic::attack(int attacker, QString attacked,bool team)
+void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
 {
     QString message="";
-    short attacks = m_dataSource->dataItems(team).at(attacker)->statList().at(22).toInt();     //pobranie liczby ataków atakującego
+    short attacks = m_dataSource->dataItems(team).at(attackerIndex)->statList().at(22).toInt();     //pobranie liczby ataków atakującego
     if(attacks==0) {
         message=message+"brak możliwości ataku";
     }else{
-        short attackValue = m_dataSource->dataItems(team).at(attacker)->statList().at(3).toInt();       //pobieranie wartości ataku
-        short dmg = m_dataSource->dataItems(team).at(attacker)->statList().at(6).toInt();               //pobieranie obrażeń
-        short dmgDice = m_dataSource->dataItems(team).at(attacker)->statList().at(5).toInt();           //pobieranie kości obrażeń
-        QString attackerName=m_dataSource->dataItems(team).at(attacker)->statList().at(0).toString();   //pobieranie nazwy atakującego
+        short attackValue = m_dataSource->dataItems(team).at(attackerIndex)->statList().at(3).toInt();       //pobieranie wartości ataku
+        short dmg = m_dataSource->dataItems(team).at(attackerIndex)->statList().at(6).toInt();               //pobieranie obrażeń
+        short dmgDice = m_dataSource->dataItems(team).at(attackerIndex)->statList().at(5).toInt();           //pobieranie kości obrażeń
+        QString attackerName=m_dataSource->dataItems(team).at(attackerIndex)->statList().at(0).toString();   //pobieranie nazwy atakującego
         QJsonValue json(attacks-1);                                                                     //zmniejszenie liczby ataków atakującego
-        m_dataSource->dataItems(team).at(attacker)->setStatList(22,json);                               //zmiana liczby ataków atakującego w datasource
+        m_dataSource->dataItems(team).at(attackerIndex)->setStatList(22,json);                               //zmiana liczby ataków atakującego w datasource
         //atak:
         for(int i =0;i<m_dataSource->dataItems(!team).size();i++){                                      //szukanie przeciwnika
-            if(m_dataSource->dataItems(!team).at(i)->statList().at(0).toString()==attacked){
+            if(m_dataSource->dataItems(!team).at(i)->statList().at(0).toString()==defenderName){
                 short defence = m_dataSource->dataItems(!team).at(i)->statList().at(4).toInt();
                 short attackRoll=QRandomGenerator::global()->bounded(1,20);
                 short attackTest = attackRoll +attackValue - defence;
                 if(attackTest>=0) {
-                    message=message+attackerName+ " trafia "+ attacked+"!: " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
+                    message=message+attackerName+ " trafia "+ defenderName+"!: " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
                     short dmgDealt = QRandomGenerator::global()->bounded(1,dmgDice)+dmg;
                     message=message+"\r\n zadano "+QString::number(dmgDealt)+" obrażeń ";
                     short hp= m_dataSource->dataItems(!team).at(i)->statList().at(2).toInt();
                     if(hp<=dmgDealt){
-                        message=message+"\r\n"+attacked+" zniszczona!";
-                        QJsonValue jsonAct(false);
-                        m_dataSource->dataItems(!team).at(i)->setStatList(23,jsonAct);                  //zmiana statusu jednostki na nieaktywny
+                        message=message+"\r\n"+defenderName+" zniszczona!";
+                        QJsonValue troopActive(false);
+                        m_dataSource->dataItems(!team).at(i)->setStatList(23,troopActive);                  //zmiana statusu jednostki na nieaktywny
                      //   emit dataChanged();
                     }
                     QJsonValue jsonDmg(hp-dmgDealt);
@@ -64,7 +64,7 @@ void GameLogic::attack(int attacker, QString attacked,bool team)
                    // emit dataChanged();
                     // return;
                 }else {
-                    message=message+attackerName+ " pudłuje "+attacked+": " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
+                    message=message+attackerName+ " pudłuje "+defenderName+": " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
                 }
             }
         }
@@ -80,12 +80,15 @@ void GameLogic::setDataSource(DataSource *ds)
 
 void GameLogic::resetMoves()
 {
-    QJsonValue json(0);
+    QJsonValue newMoves(false);
+    QJsonValue newAttacks(2);
     for(int i=0;i<m_dataSource->dataItems(true).size();i++){
-        m_dataSource->dataItems(true).at(i)->setStatList(21,json);
+        m_dataSource->dataItems(true).at(i)->setStatList(21,newMoves);
+        m_dataSource->dataItems(true).at(i)->setStatList(22,newAttacks);
     }
     for(int i=0;i<m_dataSource->dataItems(false).size();i++){
-        m_dataSource->dataItems(false).at(i)->setStatList(21,json);
+        m_dataSource->dataItems(false).at(i)->setStatList(21,newMoves);
+        m_dataSource->dataItems(false).at(i)->setStatList(22,newAttacks);
     }
 
     emit dataChanged();

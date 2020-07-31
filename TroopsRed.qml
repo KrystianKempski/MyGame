@@ -11,7 +11,7 @@ Page {
     property int heightProp
     property int cellHeight: 50
     property int cellWidth: 100
-    id:page2
+    id:troopsRed
     Item {
         id: row
         width: widthProp

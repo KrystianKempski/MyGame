@@ -46,6 +46,20 @@ QVariant TableModelBlue::data(const QModelIndex &index, int role) const
         return troop->statList().at(2).toVariant();
     case trActiveRole:
         return troop->statList().at(23).toVariant();
+    case trRangeRole:
+        return troop->statList().at(12).toVariant();
+    case trTypeRole:
+        return troop->statList().at(1).toVariant();
+    case trAttacksRole:
+        return troop->statList().at(22).toVariant();
+    case trAttackValRole:
+        return troop->statList().at(3).toVariant();
+    case trDefenceRole:
+        return troop->statList().at(4).toVariant();
+    case trDmgDiceRole:
+        return troop->statList().at(5).toVariant();
+    case trDmgValRole:
+        return troop->statList().at(6).toVariant();
     default:
         qInfo() << "błąd roli!";
         qInfo() << role;
@@ -105,9 +119,19 @@ bool TableModelBlue::setData(const QModelIndex &index, const QVariant &value, in
     }
     case trMovedRole:
     {
+        json=value.toBool();
+        if(troop->statList().at(21)!=json){
+            troop->setStatList(21,json);
+            emit dataChanged(index,index,QVector<int>() << role);
+            return true;
+        }
+        return false;
+    }
+    case trAttacksRole:
+    {
         if(ok){
-            if(troop->statList().at(21)!=json){
-                troop->setStatList(21,json);
+            if(troop->statList().at(22)!=json){
+                troop->setStatList(22,json);
                 emit dataChanged(index,index,QVector<int>() << role);
                 return true;
             }
@@ -138,6 +162,13 @@ QHash<int, QByteArray> TableModelBlue::roleNames() const
     roles[trMovedRole]="moved";
     roles[trHpRole]="hp";
     roles[trActiveRole]="active";
+    roles[trRangeRole]="range";
+    roles[trTypeRole]="type";
+    roles[trAttacksRole]="attacks";
+    roles[trAttackValRole]="attackVal";
+    roles[trDefenceRole]="defence";
+    roles[trDmgDiceRole]="dmgDice";
+    roles[trDmgValRole]="dmgVal";
     return roles;
 }
 
