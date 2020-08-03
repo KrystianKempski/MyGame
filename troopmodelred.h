@@ -43,14 +43,13 @@ public:
                  int role = Qt::EditRole) override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
     QHash<int, QByteArray> roleNames() const override;
-
-    Q_INVOKABLE QStringList findEnemy(int row, int col, int range, bool team) const;
     DataSource *dataSource() const;
     void setDataSource(DataSource * dataSource);
 signals:
     void dataSourceChanged(DataSource * dataSource);
     void troopChaged();
 public slots:
+
    Q_INVOKABLE void updateAll();
      Q_INVOKABLE void updateModel();
     Q_INVOKABLE void updateServer();

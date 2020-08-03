@@ -118,12 +118,9 @@ void BattlefieldModel2::colorCells(int row, int col, int speed, int color,bool m
     }
 }
 
-void BattlefieldModel2::cellAvalible(short row, short col, bool aval)
+void BattlefieldModel2::setCellAvailability(short row, short col, bool aval)
 {
-   // QModelIndex index = createIndex(row,col);
-    //setData(index,aval,cellTokenInRole);
     m_dataSource->setTokenIn(row,col,aval);
-
 }
 
 void BattlefieldModel2::updateModel()

@@ -15,8 +15,7 @@ int TableModelBlue::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return 26;//m_dataSource->dataItems().at(0)->statList().size();
-
+    return 9;//m_dataSource->dataItems().at(0)->statList().size();
 }
 
 QVariant TableModelBlue::data(const QModelIndex &index, int role) const
@@ -33,7 +32,7 @@ QVariant TableModelBlue::data(const QModelIndex &index, int role) const
     case trNameRole:
         return troop->statList().at(0).toVariant();
     case trSpeedRole:
-        return troop->statList().at(8).toVariant();
+        return troop->statList().at(7).toVariant();
     case trRowRole:
         return troop->statList().at(17).toVariant();
     case trColRole:
@@ -43,11 +42,11 @@ QVariant TableModelBlue::data(const QModelIndex &index, int role) const
     case trUpdateRole:
         return troop->statList().at(21).toVariant();
     case trHpRole:
-        return troop->statList().at(2).toVariant();
+        return troop->statList().at(24).toVariant();
     case trActiveRole:
         return troop->statList().at(23).toVariant();
     case trRangeRole:
-        return troop->statList().at(12).toVariant();
+        return troop->statList().at(8).toVariant();
     case trTypeRole:
         return troop->statList().at(1).toVariant();
     case trAttacksRole:
@@ -172,19 +171,6 @@ QHash<int, QByteArray> TableModelBlue::roleNames() const
     return roles;
 }
 
-QStringList TableModelBlue::findEnemy(int row, int col, int range, bool team) const
-{
-    QStringList enemy;
-    for(int i=0;i<m_dataSource->dataItems(team).size();i++){
-        int enemyRow = m_dataSource->dataItems(team).at(i)->statList().at(17).toInt();
-        int enemyCol = m_dataSource->dataItems(team).at(i)->statList().at(18).toInt();
-        if(qAbs(enemyRow-row)<=range && qAbs(enemyCol-col)<=range &&
-                (qAbs(enemyRow-row)+qAbs(enemyCol-col)<range*2)){
-            enemy.append(m_dataSource->dataItems(team).at(i)->statList().at(0).toString());
-        };
-    }
-    return enemy;
-}
 DataSource *TableModelBlue::dataSource() const
 {
     return m_dataSource;

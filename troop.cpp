@@ -71,17 +71,17 @@ void Troop::write(QJsonObject &json) const
 
     json["NAME"] = m_statList->at(0).toString();
     json["TYPE"] = m_statList->at(1).toString();
-    json["HP"] = m_statList->at(2).toInt();
+    json["MAX_HP"] = m_statList->at(2).toInt();
     json["A_VAL"] = m_statList->at(3).toInt();
     json["DEF"] = m_statList->at(4).toInt();
     json["D_DICE"] = m_statList->at(5).toInt();
     json["DMG"] = m_statList->at(6).toInt();
-    json["A_TYPE"] = m_statList->at(7).toString();
-    json["SPEED"] = m_statList->at(8).toInt();
+    json["SPEED"] = m_statList->at(7).toInt();
+    json["RANGE"]= m_statList->at(8).toInt() ;
     json["A_CHARGE"] = m_statList->at(9).toInt();
     json["A_CROWD"] = m_statList->at(10).toInt();
     json["MORALE"] = m_statList->at(11).toInt();
-    json["RANGE"]= m_statList->at(12).toInt() ;
+    json["A_TYPE"] = m_statList->at(12).toString();
     json["STR"] = m_statList->at(13).toInt() ;
     json["AGI"]= m_statList->at(14).toInt() ;
     json["END"] = m_statList->at(15).toInt();
@@ -93,7 +93,7 @@ void Troop::write(QJsonObject &json) const
     json["MOVED"] = m_statList->at(21).toBool();
     json["ATTACKS"] = m_statList->at(22).toInt();
     json["ACTIVE"] = m_statList->at(23).toBool();
-    json["MAX_HP"] = m_statList->at(24).toInt();
+    json["HP"] = m_statList->at(24).toInt();
     json["BLANK3"] = m_statList->at(25).toInt();
 }
 

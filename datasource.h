@@ -23,6 +23,9 @@ public:
     Q_INVOKABLE void addTroopRow();
     Q_PROPERTY(QString console READ readConsole WRITE writeConsole NOTIFY consoleChanged);
     Q_PROPERTY(QString chat READ readChat WRITE writeChat NOTIFY chatChanged);
+    Q_PROPERTY(bool teamTurn READ teamTurn WRITE setTeamTurn NOTIFY teamTurnChanged);
+    Q_PROPERTY(short turn READ turn WRITE setTurn NOTIFY turnChanged);
+
     // Q_INVOKABLE void removeLastTroop();
     QList<Troop*> dataItems(bool team) const;
     // Q_INVOKABLE void addTroop();
@@ -37,6 +40,10 @@ public:
    QString readConsole() const;
    QString readChat() const;
 
+   bool teamTurn() const;
+
+   short turn() const;
+
 signals:
     void preInsertTroopRed();
     void postInsertTroopRed();
@@ -49,6 +56,10 @@ signals:
     Q_INVOKABLE void consoleChanged(QString console);
     void chatChanged(QString chat);
 
+    void teamTurnChanged(bool teamTurn);
+
+    void turnChanged(short turn);
+
 private slots:
     void dataReadyRead();
     void readFinished();
@@ -59,6 +70,10 @@ public slots:
     Q_INVOKABLE void setCellColor(int row, int column, QString val);
     void writeConsole(QString console);
     void writeChat(QString chat);
+
+    void setTeamTurn(bool teamTurn);
+
+    void setTurn(short turn);
 
 private:
    // QByteArray updateData();
@@ -77,6 +92,10 @@ private:
     QTimer* m_refresh;
     QString m_chat;
     QString m_chatLine;
+    bool m_teamTurn;
+
+
+    short m_turn=-1;
 };
 
 #endif // DATASOURCE_H

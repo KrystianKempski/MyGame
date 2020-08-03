@@ -40,8 +40,6 @@ public:
     Q_INVOKABLE QJsonArray statList() const;
     void setStatList(int index,QJsonValue &value);
 
-
-
     //saving to JSON
   //  void read();
     void write(QJsonObject &json) const;

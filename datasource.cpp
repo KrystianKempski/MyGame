@@ -62,11 +62,13 @@ void DataSource::changeItem()
     data1.insert("consoleLine",consoleLine);
     QJsonValue chatLine(m_chatLine);
     data1.insert("chatLine",chatLine);
+    QJsonValue teamTurn(m_teamTurn);
+    data1.insert("teamTurn",teamTurn);
+    QJsonValue turn(m_turn);
+    data1.insert("turn",turn);
     QJsonDocument doc(data1);
     QByteArray jsonData= doc.toJson();
-    //m_NetReply=m_netManager->put(request,jsonData);
     m_NetReply=m_netManager->sendCustomRequest(request,"PUT",jsonData);
-   // qInfo() << m_NetReply;
     if(m_NetReply->error())
         qInfo() <<"błąd w changeItem" +m_NetReply->errorString();
     connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::writeFinished);
@@ -81,11 +83,13 @@ void DataSource::readFinished()
         QJsonValue dataUpdate = data1["dataUpdate"];
         if(dataUpdate.toInt()!=m_dataUpdate) {                          //sprawdzanie czy zaszły zmiany na serwerze
             m_dataUpdate=dataUpdate.toInt();
-            QJsonValue consoleLine = data1["consoleLine"];
-            QJsonValue chatLine = data1["chatLine"];
+            //QJsonValue consoleLine = data1["consoleLine"];
+            //QJsonValue chatLine = data1["chatLine"];
+            setTeamTurn(data1["teamTurn"].toBool());                   //ustalenie do kogo należy tura
+            setTurn(data1["turn"].toInt());                             //ustalenie tury
             if(0!=dataItems(true).size()+dataItems(false).size()) {
-                writeConsole(consoleLine.toString());
-                writeChat(chatLine.toString());
+                writeConsole(data1["consoleLine"].toString());
+                writeChat(data1["chatLine"].toString());
             }
             QJsonArray postsArray = data1["posts"].toArray();
             QJsonObject troopsObject = postsArray.at(0).toObject();
@@ -99,17 +103,17 @@ void DataSource::readFinished()
                 QJsonObject object = troopsArray.at(i).toObject();
                 QJsonValue name = object["NAME"];
                 QJsonValue type = object["TYPE"];
-                QJsonValue hp = object["HP"];
+                QJsonValue maxHp = object["MAX_HP"];
                 QJsonValue aVal = object["A_VAL"];
                 QJsonValue def = object["DEF"];
                 QJsonValue dDice = object["D_DICE"];
                 QJsonValue dmg = object["DMG"];
-                QJsonValue aType = object["A_TYPE"];
                 QJsonValue speed = object["SPEED"];
+                QJsonValue range = object["RANGE"] ;
                 QJsonValue aCharge = object["A_CHARGE"];
                 QJsonValue aCrowd = object["A_CROWD"];
                 QJsonValue morale = object["MORALE"];
-                QJsonValue range = object["RANGE"] ;
+                QJsonValue aType = object["A_TYPE"];
                 QJsonValue str = object["STR"];
                 QJsonValue agi = object["AGI"] ;
                 QJsonValue end = object["END"];
@@ -121,8 +125,9 @@ void DataSource::readFinished()
                 QJsonValue moved = object["MOVED"];
                 QJsonValue attacked = object["ATTACKS"];
                 QJsonValue active = object["ACTIVE"];
-                QJsonValue maxHp = object["MAX_HP"];
+                 QJsonValue hp = object["HP"];
                 QJsonValue blank3 = object["BLANK3"];
+
                 if(i>=dataItems(true).size()+dataItems(false).size()){
                     troop = new Troop(this);
                 }else{
@@ -130,17 +135,17 @@ void DataSource::readFinished()
                 }
                 troop->setStatList(0,name);
                 troop->setStatList(1,type);
-                troop->setStatList(2,hp);
+                troop->setStatList(2,maxHp);
                 troop->setStatList(3,aVal);
                 troop->setStatList(4,def);
                 troop->setStatList(5,dDice);
                 troop->setStatList(6,dmg);
-                troop->setStatList(7,aType);
-                troop->setStatList(8,speed);
+                troop->setStatList(7,speed);
+                troop->setStatList(8,range);
                 troop->setStatList(9,aCharge);
                 troop->setStatList(10,aCrowd);
                 troop->setStatList(11,morale);
-                troop->setStatList(12,range);
+                troop->setStatList(12,aType);
                 troop->setStatList(13,str);
                 troop->setStatList(14,agi);
                 troop->setStatList(15,end);
@@ -152,7 +157,7 @@ void DataSource::readFinished()
                 troop->setStatList(21,moved);
                 troop->setStatList(22,attacked);
                 troop->setStatList(23,active);
-                troop->setStatList(24,maxHp);
+                troop->setStatList(24,hp);
                 troop->setStatList(25,blank3);
                 setTokenIn(row.toInt(),col.toInt(),true);
                 if(i>=dataItems(true).size()+dataItems(false).size()) addTroop(troop,team.toBool());      //dodawanie oddziału do drużyn
@@ -215,6 +220,16 @@ QString DataSource::readChat() const
     return m_chat;
 }
 
+bool DataSource::teamTurn() const
+{
+    return m_teamTurn;
+}
+
+short DataSource::turn() const
+{
+    return m_turn;
+}
+
 void DataSource::setTokenIn(int row, int col, bool val)
 {
     m_tokenIn->replace(row*m_cellRows+col,val);
@@ -241,6 +256,24 @@ void DataSource::writeChat(QString chat)
     m_chat = m_chat + "\r\n" +chat;
     emit chatChanged(m_chat);
     changeItem();
+}
+
+void DataSource::setTeamTurn(bool teamTurn)
+{
+    if (m_teamTurn == teamTurn)
+        return;
+
+    m_teamTurn = teamTurn;
+    emit teamTurnChanged(m_teamTurn);
+}
+
+void DataSource::setTurn(short turn)
+{
+    if (m_turn == turn)
+        return;
+
+    m_turn = turn;
+    emit turnChanged(m_turn);
 }
 
 

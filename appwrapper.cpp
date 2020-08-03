@@ -28,10 +28,8 @@ void AppWrapper::initialize()
      m_engine.rootContext()->setContextProperty("gamelogic",&m_gameLogic);
     m_engine.rootContext()->setContextProperty("battleModel2", &m_battleModel);
     m_engine.rootContext()->setContextProperty("dataSource",ds);
-   // m_engine.rootContext()->setContextProperty("dataBase",&ds2);
-
-    m_app->setOrganizationName("somename");
-    m_app->setOrganizationDomain("somename");
+    m_app->setOrganizationName("KrystianKempski");
+    m_app->setOrganizationDomain("KrystianKempski");
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     connect(&m_engine, &QQmlApplicationEngine::objectCreated,
@@ -40,5 +38,7 @@ void AppWrapper::initialize()
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     m_engine.load(url);
+    //connect(m_app,&QGuiApplication::aboutToQuit,[=](){qInfo()<<"test";} );
+
 
 }

@@ -12,8 +12,8 @@ Page {
     
     property int widthProp
     property int heightProp
-    width: widthProp
-    height: heightProp
+    width: parent.width//widthProp
+    height: parent.height//heightProp
     title: qsTr("Hello World")
     property int cellSize: 64
 
@@ -214,7 +214,7 @@ Page {
             anchors.rightMargin: 5
             anchors.topMargin: 5
             width: parent.width-10
-            height: parent.height-200
+            height: parent.height-400
             radius: 5
             color: "white"
             Flickable {
@@ -256,6 +256,20 @@ Page {
             color: "black"
 
         }
+        Text {
+            id: txtTeamTurn
+            visible: dataSource.turn >=0? true : false
+            anchors.bottom: btnAddTroops.top
+            anchors.left: rightToolBar.left
+            text: dataSource.teamTurn ? "tura czerwonych" : "tura niebieskich"
+        }
+        Text {
+            id: txtTurn
+            visible: dataSource.turn >=0? true : false
+            anchors.bottom: btnAddTroops.top
+            anchors.left: txtTeamTurn.right
+            text: dataSource.turn >=0 ? dataSource.turn : "-"
+        }
         Button {
             id: btnSend
             anchors.top: chatInput.bottom
@@ -277,12 +291,12 @@ Page {
             }
         }
         Button {
+            enabled: dataSource.turn >=0 ? dataSource.teamTurn : false
             anchors.bottom: rightToolBar.bottom
             id: btnReady
-            text: "Ready"
+            text: "End turn"
             onClicked: {
-                gamelogic.playerReady(1)
-                gamelogic.nextTurn()
+                gamelogic.endTurn(true)
             }
 
         }

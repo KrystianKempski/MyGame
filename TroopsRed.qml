@@ -14,8 +14,8 @@ Page {
     id:troopsRed
     Item {
         id: row
-        width: widthProp
-        height: heightProp
+        width: parent.width//widthProp
+        height: parent.height//heightProp
         Column{
             anchors.fill: parent
             Button {
@@ -25,7 +25,6 @@ Page {
                     dataSource.fetchTroops(true)
                 }
             }
-          //  Flickable {
 
             ScrollView{
                 id: scrollView1
@@ -48,59 +47,25 @@ Page {
                         model: TableModel {
                             TableModelColumn{ display: "NAME" }
                             TableModelColumn { display: "TYPE" }
-                            TableModelColumn { display: "HP" }
+                            TableModelColumn { display: "MAX_HP" }
                             TableModelColumn { display: "A_VAL" }
                             TableModelColumn { display: "DEF" }
                             TableModelColumn { display: "D_DICE" }
                             TableModelColumn { display: "DMG" }
-                            TableModelColumn { display: "A_TYPE" }
                             TableModelColumn { display: "SPEED" }
-                            TableModelColumn { display: "A_CHARGE" }
-                            TableModelColumn { display: "A_CROWD" }
-                            TableModelColumn { display: "MORALE" }
                             TableModelColumn { display: "RANGE" }
-                            TableModelColumn { display: "STR" }
-                            TableModelColumn { display: "AGI" }
-                            TableModelColumn { display: "END" }
-                            TableModelColumn { display: "WILL" }
-                            TableModelColumn { display: "ROW" }
-                            TableModelColumn { display: "COL" }
-                            TableModelColumn { display: "T_ID" }
-                            TableModelColumn { display: "TEAM" }
-                            TableModelColumn { display: "MOVED" }
-                            TableModelColumn { display: "ATTACKED" }
-                            TableModelColumn { display: "ACTIVE" }
-                            TableModelColumn { display: "MAX_HP" }
-                            TableModelColumn { display: "BLANK3" }
 
                             rows: [
                                 {
                                     "NAME": "nazwa",
                                     "TYPE": "typ",
-                                    "HP": "HP",
+                                    "MAX_HP": "HP",
                                     "A_VAL": "Atak",
                                     "DEF": "Obrona",
                                     "D_DICE": "kość obr.",
                                     "DMG": "obrażenia",
-                                    "A_TYPE": "typ obr.",
                                     "SPEED": "prędkość",
-                                    "A_CHARGE": "bonus z szarży",
-                                    "A_CROWD": "atak w ścisku",
-                                    "MORALE": "morale",
                                     "RANGE": "zasięg",
-                                    "STR": "siła",
-                                    "AGI": "zręczność",
-                                    "END": "wytrzymałość",
-                                    "WILL": "wola",
-                                    "ROW": "rząd",
-                                    "COL": "kolumna",
-                                    "T_ID": "id",
-                                    "TEAM": "drużyna",
-                                    "MOVED": "poruszona",
-                                    "ATTACKED": "zaatakowano",
-                                    "ACTIVE": "aktywna",
-                                    "MAX_HP": "max hp",
-                                    "BLANK3": "puste"
                                 }
                             ]
                         }
@@ -118,7 +83,8 @@ Page {
                     }
                 }
                     Item{
-                        width: cellWidth*26
+                        id: troopsTable
+                        width: cellWidth*9
                         height: 500
                         anchors.top: headerRec.bottom
                         anchors.left: headerRec.left
@@ -138,7 +104,6 @@ Page {
                                     anchors.fill: parent
                                     text: model.troops
                                     onAccepted: {
-                                        //troopModelRed.setData(troopModelRed.index(model.row,model.col),text,258)
                                         model.troops = text
                                         troopModelRed.updateServer()
                                     }
@@ -148,12 +113,19 @@ Page {
 
                         }
                     }
-             //  }
+                    Repeater{
 
-
-
-
-
+                        model: troopModelRed
+                        delegate: Button{
+                            text: "Resetuj oddział"
+                            height: cellHeight-10
+                            font.pixelSize: 10
+                            width: 100
+                            x:cellWidth*9
+                            y:cellHeight + model.index * cellHeight +5
+                            onClicked: gamelogic.resetTroop(model.index,true)
+                        }
+                    }
             }
             Button {
                 id: button2

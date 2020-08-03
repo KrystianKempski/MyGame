@@ -13,10 +13,11 @@ class GameLogic : public QObject
 public:
     explicit GameLogic(QObject *parent = nullptr);
     Q_INVOKABLE void startGame();
-    Q_INVOKABLE void playerReady(bool team);
-    Q_INVOKABLE void nextTurn();
+    Q_INVOKABLE void endTurn(bool team);
     Q_INVOKABLE void attack(int attackerIndex, QString defenderName,bool team);
     void setDataSource(DataSource* ds);
+    Q_INVOKABLE void resetTroop(short troopIndex, bool team);
+    Q_INVOKABLE QStringList findEnemy(int row, int col, int range, bool team) const;
 
 signals:
     void dataChanged();
@@ -24,8 +25,8 @@ private:
     void resetMoves();
     DataSource* m_dataSource;
     short m_turn;
-    bool m_teamRedReady=false;
-    bool m_teamBlueReady=true;
+    bool m_teamTurn;
+
 
 };
 

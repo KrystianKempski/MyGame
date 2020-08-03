@@ -20,10 +20,9 @@ Rectangle {
     property int b_columnX: model.colTr*size
     property int hp: model.hp
     property bool troopExists:model.active                                                      //check if troop is on battlefield
-    property double barProgress: hp/troopModelRed.data(troopModelRed.index(trIndex,24),258)
+    property double barProgress: hp/troopModelRed.data(troopModelRed.index(trIndex,2),258)
     property var temp
 
-    //if(troopType==="konnica")  troopType=1
     opacity: troopExists? 1 : 0.5
     implicitWidth: size
     implicitHeight: size
@@ -31,14 +30,9 @@ Rectangle {
     y: b_rowX
     x: b_columnX
 
-
     Component.onCompleted: {
-        //battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),true,258)
-        // troopModelRed.findEnemy(trRow,trCol,2,false)
-        battleModel2.cellAvalible(model.rowTr,model.colTr,true)
+        battleModel2.setCellAvailability(model.rowTr,model.colTr,true)
     }
-
-    //onTroopExistsChanged: battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
     color: "red"
     Drag.keys: [ colorKey ]
     Drag.active: mouseArea.drag.active
@@ -51,9 +45,7 @@ Rectangle {
         anchors.centerIn: parent
         source: troopIcon
     }
-
     Text {
-
         id: text1
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
@@ -85,12 +77,12 @@ Rectangle {
             id: hpValue
             color: "white"
             anchors.centerIn: parent
-            text: hp+"/"+troopModelRed.data(troopModelRed.index(trIndex,24),258)
+            text: hp+"/"+troopModelRed.data(troopModelRed.index(trIndex,2),258)
         }
     }
     MouseArea {
 
-        visible: troopExists? editable : false
+        visible: troopExists&&dataSource.teamTurn? editable : false
         id: mouseArea
         acceptedButtons: Qt.AllButtons
         width: size-2; height: size-2
@@ -109,7 +101,6 @@ Rectangle {
         onPressed: {
             if(mouseArea.pressedButtons & Qt.RightButton){
                 actionMenu.popup()
-
             }
         }
         onReleased:{
@@ -119,7 +110,7 @@ Rectangle {
             token.z=1
             battleModel2.colorCells(model.rowTr,model.colTr,model.speed,0,model.moved)              //pomalowanie kafelków na przezroczyste
             if(temp!== null){
-                battleModel2.cellAvalible(model.rowTr,model.colTr,false)                              //odznaczenie kafelka jako wolny
+                battleModel2.setCellAvailability(model.rowTr,model.colTr,false)                              //odznaczenie kafelka jako wolny
                 model.rowTr=token.y/size
                 model.colTr=token.x/size
                 model.moved=true                                                                           //zaznaczanie że oddział się ruszył
@@ -131,12 +122,9 @@ Rectangle {
     states: State {
         when: troopExists==false
         onCompleted:  {
-            //  console.log(model.rowTr)
             battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
             model.colTr=9
             model.rowTr=9
-
-
         }
     }
     Menu{
@@ -144,7 +132,7 @@ Rectangle {
         Menu{
             title: "Atak"
             Repeater {
-                model: troopModelRed.findEnemy(trRow,trCol,troopRange,false)
+                model: gamelogic==null? 0: gamelogic.findEnemy(trRow,trCol,troopRange,false)
                 MenuItem {
                     text: modelData
                     onClicked: gamelogic.attack(trIndex,modelData,team)

@@ -8,6 +8,8 @@
         <file>BattlefieldBlue.qml</file>
         <file>TroopsBlue.qml</file>
         <file>TokenBlue.qml</file>
+        <file>PlayerWidnow.qml</file>
+        <file>EnterWindow.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>field.jpg</file>

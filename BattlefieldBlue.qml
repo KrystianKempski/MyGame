@@ -12,8 +12,8 @@ Page {
 
     property int widthProp
     property int heightProp
-    width: widthProp
-    height: heightProp
+    width: parent.width//widthProp
+    height: parent.height//heightProp
     title: qsTr("Hello World")
     property int cellSize: 64
 
@@ -186,7 +186,7 @@ Page {
                 id: tableview
                 implicitHeight: cellSize*dataSource.getCellRowCount()
                 implicitWidth: cellSize*dataSource.getCellColumnCount()
-                 clip: true
+                clip: true
                 model: battleModel2
                 delegate: Cell { colorKey: "blue"; size: cellSize }
             }
@@ -214,7 +214,7 @@ Page {
             anchors.rightMargin: 5
             anchors.topMargin: 5
             width: parent.width-10
-            height: parent.height-200
+            height: parent.height-400
             radius: 5
             color: "white"
             Flickable {
@@ -243,18 +243,29 @@ Page {
             }
         }
         TextField {
-        id: chatInput
-        //readOnly: false
-        anchors.top: chat1.bottom
-        anchors.right: parent.right
-        anchors.rightMargin: 5
-        anchors.topMargin: 5
-        width: parent.width-10
-        //placeholderText: "wpisz wiadomość"
-        height: 30
-        //radius: 5
-        color: "black"
+            id: chatInput
+            anchors.top: chat1.bottom
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+            anchors.topMargin: 5
+            width: parent.width-10
+            height: 30
+            color: "black"
 
+        }
+        Text {
+            id: txtTeamTurn
+            visible: dataSource.turn >=0? true : false
+            anchors.bottom: btnAddTroops.top
+            anchors.left: rightToolBar.left
+            text: dataSource.teamTurn ? "tura czerwonych" : "tura niebieskich"
+        }
+        Text {
+            id: txtTurn
+            visible: dataSource.turn >=0? true : false
+            anchors.bottom: btnAddTroops.top
+            anchors.left: txtTeamTurn.right
+            text: dataSource.turn >=0 ? dataSource.turn : "-"
         }
         Button {
             id: btnSend
@@ -263,7 +274,7 @@ Page {
             anchors.right: chatInput.right
             text: "send"
             onClicked: {
-                 dataSource.writeChat("Blue: " +chatInput.text)
+                dataSource.writeChat("Blue: " +chatInput.text)
                 chatInput.text=""
             }
         }
@@ -278,10 +289,10 @@ Page {
         Button {
             anchors.bottom: rightToolBar.bottom
             id: btnReady
-            text: "Ready"
+            enabled: dataSource.turn >=0 ? !dataSource.teamTurn : false
+            text: "End Turn"
             onClicked: {
-                gamelogic.playerReady(1)
-                gamelogic.nextTurn()
+                gamelogic.endTurn(false)
             }
         }
 

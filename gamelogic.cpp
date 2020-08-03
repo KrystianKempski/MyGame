@@ -12,21 +12,13 @@ void GameLogic::startGame()
 
 }
 
-void GameLogic::playerReady(bool team)
+void GameLogic::endTurn(bool team)
 {
-    team? m_teamRedReady=true:m_teamBlueReady=true;
-}
-
-void GameLogic::nextTurn()
-{
-    if(m_teamRedReady&&m_teamBlueReady){
-        m_turn++;
-        m_teamRedReady=false;
-        m_teamBlueReady=true;
-        resetMoves();
-    }else{
-        m_teamRedReady? qInfo()<< "team blue is not ready" : qInfo() << "team red is not ready";
-    }
+    m_teamTurn = !team;
+    m_dataSource->setTeamTurn(!team);
+    if(team) m_dataSource->setTurn(m_dataSource->turn()+1);
+    resetMoves();
+     emit dataChanged();
 }
 
 void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
@@ -52,7 +44,7 @@ void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
                     message=message+attackerName+ " trafia "+ defenderName+"!: " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
                     short dmgDealt = QRandomGenerator::global()->bounded(1,dmgDice)+dmg;
                     message=message+"\r\n zadano "+QString::number(dmgDealt)+" obrażeń ";
-                    short hp= m_dataSource->dataItems(!team).at(i)->statList().at(2).toInt();
+                    short hp= m_dataSource->dataItems(!team).at(i)->statList().at(24).toInt();
                     if(hp<=dmgDealt){
                         message=message+"\r\n"+defenderName+" zniszczona!";
                         QJsonValue troopActive(false);
@@ -60,7 +52,7 @@ void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
                      //   emit dataChanged();
                     }
                     QJsonValue jsonDmg(hp-dmgDealt);
-                    m_dataSource->dataItems(!team).at(i)->setStatList(2,jsonDmg);                       //zmiana hp jednostyki
+                    m_dataSource->dataItems(!team).at(i)->setStatList(24,jsonDmg);                       //zmiana hp jednostyki
                    // emit dataChanged();
                     // return;
                 }else {
@@ -92,4 +84,25 @@ void GameLogic::resetMoves()
     }
 
     emit dataChanged();
+}
+void GameLogic::resetTroop(short index, bool team)
+{
+    QJsonValue hp= m_dataSource->dataItems(team).at(index)->statList().at(2);
+    m_dataSource->dataItems(team).at(index)->setStatList(24,hp);
+    QJsonValue troopActive(true);
+    m_dataSource->dataItems(team).at(index)->setStatList(23,troopActive);
+    emit dataChanged();
+}
+QStringList GameLogic::findEnemy(int row, int col, int range, bool team) const
+{
+    QStringList enemy;
+    for(int i=0;i<m_dataSource->dataItems(team).size();i++){
+        int enemyRow = m_dataSource->dataItems(team).at(i)->statList().at(17).toInt();
+        int enemyCol = m_dataSource->dataItems(team).at(i)->statList().at(18).toInt();
+        if(qAbs(enemyRow-row)<=range && qAbs(enemyCol-col)<=range &&
+                (qAbs(enemyRow-row)+qAbs(enemyCol-col)<range*2)){
+            enemy.append(m_dataSource->dataItems(team).at(i)->statList().at(0).toString());
+        };
+    }
+    return enemy;
 }

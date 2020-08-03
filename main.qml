@@ -8,11 +8,12 @@ import Qt.labs.qmlmodels 1.0
 
 
 ApplicationWindow {
+    id:mainWindow
+    property bool chosenTeam
     visible: true
     width: 1140
     height: 650
     title: qsTr("Hello World")
-
     FileDialog{
         id: openDialog
         title: "Please chose a file"
@@ -52,26 +53,26 @@ ApplicationWindow {
         id: actionTroops1
         text: "Troops"
         icon.color: "transparent"
-        onTriggered: view.pageNum = 2
+        onTriggered: chosenTeam ? stackView.push("TroopsRed.qml"):stackView.push("TroopsBlue.qml")
     }
     Action {
         id: actionBattlefield1
         text: "Battlefield"
         icon.color: "transparent"
-        onTriggered: view.pageNum = 1
+        onTriggered: chosenTeam ? stackView.push("BattlefieldRed.qml"):stackView.push("BattlefieldBlue.qml")
     }
-    Action {
-        id: actionTroops2
-        text: "Troops2"
-        icon.color: "transparent"
-        onTriggered: view.pageNum = 4
-    }
-    Action {
-        id: actionBattlefield2
-        text: "Battlefield"
-        icon.color: "transparent"
-        onTriggered: view.pageNum = 3
-    }
+//    Action {
+//        id: actionTroops2
+//        text: "Troops2"
+//        icon.color: "transparent"
+//        onTriggered: view.pageNum = 4
+//    }
+//    Action {
+//        id: actionBattlefield2
+//        text: "Battlefield"
+//        icon.color: "transparent"
+//        onTriggered: view.pageNum = 3
+//    }
 
     menuBar: MenuBar{
         Menu{
@@ -82,8 +83,6 @@ ApplicationWindow {
             MenuItem{action: actionSave }
             MenuItem{action: actionTroops1 }
             MenuItem{action: actionBattlefield1}
-            MenuItem{action: actionTroops2 }
-            MenuItem{action: actionBattlefield2}
         }
         Menu{
             id: menuEdit
@@ -91,34 +90,11 @@ ApplicationWindow {
             MenuItem{  action: actionNew }
         }
     }
-        Item{
-            Component.onCompleted: dataSource.writeConsole("nowa gra\r\n")
-            width: parent.width
-            height: parent.height
-            id: view
-            property bool changed2: false
-            property int pageNum: 1
-            anchors.fill: parent
+    StackView {
+        id: stackView
+        initialItem: "EnterWindow.qml"
+        anchors.fill: parent
+    }
 
-            BattlefieldRed {
-                widthProp: parent.width
-                heightProp: parent.height
-                visible: parent.pageNum===1
-            }
-            TroopsRed {
-                widthProp: parent.width
-                heightProp: parent.height
-                visible: parent.pageNum===2
-            }
-            BattlefieldBlue {
-                widthProp: parent.width
-                heightProp: parent.height
-                visible: parent.pageNum===3
-            }
-            TroopsBlue {
-                widthProp: parent.width
-                heightProp: parent.height
-                visible: parent.pageNum===4
-            }
-        }
+
 }
