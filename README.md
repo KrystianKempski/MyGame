@@ -1,0 +1,2 @@
+# MyGame
+Aplikacja desktopowa. Gra taktyczna, gdzie dwie armie podzielone na oddziały o różnych statystykach ścierają się ze sobą w turowej potyczce. Statystyki i liczba oddziałów są modyfikowlne.  Aplikacja przechowuje informacje o oddziałach, ich pozycji i stanie rozgrywki na serwerze hostingowym https://jsonbin.io/, dzięki czemu gracze mogą śledzić ruchy swoje i swojego przeciwnika przez internet. 
