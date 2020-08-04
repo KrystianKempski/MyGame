@@ -194,11 +194,11 @@ void TableModel2::setDataSource(DataSource *dataSource)
         endInsertRows();
     });
 
-    connect(m_dataSource,&DataSource::preRemoveTroop,this,[=](int index){
+    connect(m_dataSource,&DataSource::preRemoveTroopRed,this,[=](int index){
         beginRemoveRows(QModelIndex(),index,index);
     });
 
-    connect(m_dataSource,&DataSource::postRemoveTroop,this,[=](){
+    connect(m_dataSource,&DataSource::postRemoveTroopRed,this,[=](){
         endRemoveRows();
     });
     m_signalConnected = true;

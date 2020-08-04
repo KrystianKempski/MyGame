@@ -115,7 +115,7 @@ Page {
                 }
             }
         }
-      //  }
+        //  }
         Rectangle{
             id: consoleBox
             x: 0
@@ -144,7 +144,7 @@ Page {
                     TextArea.flickable: TextArea {
                         id:txtConsole
                         font.pixelSize: 12
-                        width: parent.width
+                        //width: parent.width
                         readOnly: true
                         height: 200
                         color:  "black"
@@ -256,19 +256,67 @@ Page {
             color: "black"
 
         }
-        Text {
-            id: txtTeamTurn
-            visible: dataSource.turn >=0? true : false
-            anchors.bottom: btnAddTroops.top
-            anchors.left: rightToolBar.left
-            text: dataSource.teamTurn ? "tura czerwonych" : "tura niebieskich"
-        }
-        Text {
-            id: txtTurn
-            visible: dataSource.turn >=0? true : false
-            anchors.bottom: btnAddTroops.top
-            anchors.left: txtTeamTurn.right
-            text: dataSource.turn >=0 ? dataSource.turn : "-"
+
+          Rectangle{
+            anchors.bottom: endTurn.top
+            anchors.horizontalCenter: rightToolBar.horizontalCenter
+            anchors.margins: 5
+           color: "beige"
+           border.color: "black"
+           border.width: 1
+           width: 154
+           height: 60
+
+              Text {
+                id: txtTeamTurn
+                 wrapMode:  Text.WordWrap
+                 width: parent.width
+                 height: parent.height
+                 horizontalAlignment:  Text.AlignHCenter
+                 verticalAlignment: Text.AlignVCenter
+                 font.bold: true
+                visible: dataSource.turn >=0? true : false
+                color: dataSource.teamTurn ? "red" : "blue"
+                text: dataSource.teamTurn ? "TURA CZERWONYCH" : "TURA NIEBIESKICH"
+            }
+          }
+          Row {
+              id: endTurn
+              anchors.bottom: parent.bottom
+              anchors.horizontalCenter: rightToolBar.horizontalCenter
+              spacing: 4
+              anchors.bottomMargin: 5
+          Rectangle{
+              id: rectTurn
+              anchors.margins: 2
+              color: "beige"
+              border.color: "black"
+              border.width: 1
+
+              width: 50
+              height: btnReady.height
+            Text {
+                id: txtTurn
+                wrapMode:  Text.WordWrap
+                width: parent.width
+                height: parent.height
+                horizontalAlignment:  Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                visible: dataSource.turn >=0? true : false
+                font.bold: true
+                text: dataSource.turn >=0 ? "TURA \r\n"+dataSource.turn :"TURA \r\n -"
+            }
+          }
+          Button {
+              enabled: dataSource.turn >=0 ? dataSource.teamTurn : false
+              id: btnReady
+              height: 70
+              text: "End turn"
+              onClicked: {
+                  gamelogic.endTurn(true)
+              }
+
+          }
         }
         Button {
             id: btnSend
@@ -282,24 +330,6 @@ Page {
             }
         }
 
-        Button {
-            anchors.bottom: btnReady.top
-            id: btnAddTroops
-            text: "add"
-            onClicked: {
-                dataSource.fetchTroops()
-            }
-        }
-        Button {
-            enabled: dataSource.turn >=0 ? dataSource.teamTurn : false
-            anchors.bottom: rightToolBar.bottom
-            id: btnReady
-            text: "End turn"
-            onClicked: {
-                gamelogic.endTurn(true)
-            }
-
-        }
 
     }
 

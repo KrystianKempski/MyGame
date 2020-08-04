@@ -18,14 +18,17 @@ public:
     void setDataSource(DataSource* ds);
     Q_INVOKABLE void resetTroop(short troopIndex, bool team);
     Q_INVOKABLE QStringList findEnemy(int row, int col, int range, bool team) const;
+    Q_INVOKABLE void removeTroop(bool team, short index);
+    Q_INVOKABLE void addTroop(bool team, short index);
+    Q_INVOKABLE void startNewGame();
 
 signals:
     void dataChanged();
 private:
     void resetMoves();
     DataSource* m_dataSource;
-    short m_turn;
-    bool m_teamTurn;
+//    short m_turn;
+  //  bool m_teamTurn;
 
 
 };

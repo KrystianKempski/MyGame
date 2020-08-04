@@ -22,7 +22,7 @@ Item {
                 //icon.color: "red"
                 width: 300
                 onClicked: {
-                    stackView.push("BattlefieldRed.qml")
+                    stackView.push("TroopsRed.qml")
                     mainWindow.chosenTeam=true
                 }
             }
@@ -33,7 +33,7 @@ Item {
                 width: 300
                 //icon.color: "blue"
                 onClicked: {
-                     stackView.push("BattlefieldBlue.qml")
+                     stackView.push("TroopsBlue.qml")
                     mainWindow.chosenTeam=false
                 }
             }

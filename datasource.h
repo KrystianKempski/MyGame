@@ -31,7 +31,7 @@ public:
     // Q_INVOKABLE void addTroop();
     Q_INVOKABLE void addTroop(Troop *value,bool team);
    // Q_INVOKABLE void addTroop(const QString &trName);
-   // Q_INVOKABLE void removeTroop(int index);
+    Q_INVOKABLE void removeTroop(bool team, short index);
     Q_INVOKABLE QString getCellColor(int row, int column) const;
     Q_INVOKABLE bool getTokenIn(int row, int column) const;
     Q_INVOKABLE short getCellRowCount() const;
@@ -49,8 +49,10 @@ signals:
     void postInsertTroopRed();
     void preInsertTroopBlue();
     void postInsertTroopBlue();
-    void preRemoveTroop(int index);
-    void postRemoveTroop();
+    void preRemoveTroopRed(int index);
+    void postRemoveTroopRed();
+    void preRemoveTroopBlue(int index);
+    void postRemoveTroopBlue();
     void tokenIn(int row,int col,bool val);
     Q_INVOKABLE void troopChanged();
     Q_INVOKABLE void consoleChanged(QString console);

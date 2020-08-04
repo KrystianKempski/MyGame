@@ -14,11 +14,10 @@ void GameLogic::startGame()
 
 void GameLogic::endTurn(bool team)
 {
-    m_teamTurn = !team;
     m_dataSource->setTeamTurn(!team);
     if(team) m_dataSource->setTurn(m_dataSource->turn()+1);
     resetMoves();
-     emit dataChanged();
+   //  emit dataChanged();
 }
 
 void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
@@ -105,4 +104,86 @@ QStringList GameLogic::findEnemy(int row, int col, int range, bool team) const
         };
     }
     return enemy;
+}
+
+void GameLogic::removeTroop(bool team, short index)
+{
+   m_dataSource->removeTroop(team,index);
+   emit dataChanged();
+}
+
+void GameLogic::addTroop(bool aTeam,short index)
+{
+    Troop *troop = new Troop;
+            QJsonValue name("");
+            QJsonValue type("");
+            QJsonValue maxHp(20);
+            QJsonValue aVal(2);
+            QJsonValue def(10);
+            QJsonValue dDice(6);
+            QJsonValue dmg(0);
+            QJsonValue speed(3);
+            QJsonValue range(1);
+            QJsonValue aCharge(0);
+            QJsonValue aCrowd(0);
+            QJsonValue morale(0);
+            QJsonValue aType("");
+            QJsonValue str(0);
+            QJsonValue agi(0);
+            QJsonValue end(0);
+            QJsonValue will(0);
+            QJsonValue row;
+            if(aTeam) {
+                row=0;
+            }else{
+                 row=14;
+            }
+            QJsonValue col(3+index);
+            QJsonValue id(index);
+            QJsonValue team(aTeam);
+            QJsonValue moved(false);
+            QJsonValue attacked(2) ;
+            QJsonValue active(true);
+            QJsonValue hp(0);
+            QJsonValue blank3(0);
+
+
+            troop->setStatList(0,name);
+            troop->setStatList(1,type);
+            troop->setStatList(2,maxHp);
+            troop->setStatList(3,aVal);
+            troop->setStatList(4,def);
+            troop->setStatList(5,dDice);
+            troop->setStatList(6,dmg);
+            troop->setStatList(7,speed);
+            troop->setStatList(8,range);
+            troop->setStatList(9,aCharge);
+            troop->setStatList(10,aCrowd);
+            troop->setStatList(11,morale);
+            troop->setStatList(12,aType);
+            troop->setStatList(13,str);
+            troop->setStatList(14,agi);
+            troop->setStatList(15,end);
+            troop->setStatList(16,will);
+            troop->setStatList(17,row);
+            troop->setStatList(18,col);
+            troop->setStatList(19,id);
+            troop->setStatList(20,team);
+            troop->setStatList(21,moved);
+            troop->setStatList(22,attacked);
+            troop->setStatList(23,active);
+            troop->setStatList(24,hp);
+            troop->setStatList(25,blank3);
+            m_dataSource->setTokenIn(row.toInt(),col.toInt(),true);
+    m_dataSource->addTroop(troop,aTeam);
+    emit dataChanged();
+}
+
+void GameLogic::startNewGame()
+{
+    m_dataSource->dataItems(true).clear();
+    m_dataSource->dataItems(false).clear();
+    m_dataSource->setTurn(1);
+    m_dataSource->setTeamTurn(true);
+emit dataChanged();
 }

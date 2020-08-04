@@ -131,7 +131,7 @@ void DataSource::readFinished()
                 if(i>=dataItems(true).size()+dataItems(false).size()){
                     troop = new Troop(this);
                 }else{
-                    troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
+                    troop= dataItems(team.toBool()).at(team.toBool() ? troopRedIndex++ : troopBlueIndex++);
                 }
                 troop->setStatList(0,name);
                 troop->setStatList(1,type);
@@ -344,12 +344,18 @@ void DataSource::addTroop(Troop *value,bool team)
     }
 }
 
-//void DataSource::removeTroop(int index)
-//{
-//    emit preRemoveTroop(index);
-//    m_troops.removeAt(index);
-//    emit postRemoveTroop();
-//}
+void DataSource::removeTroop(bool team, short index)
+{
+    if(team){
+        emit preRemoveTroopRed(index);
+        m_troopsRed.removeAt(index) ;
+        emit postRemoveTroopRed();
+    }else{
+        emit preRemoveTroopBlue(index);
+        m_troopsBlue.removeAt(index) ;
+        emit postRemoveTroopBlue();
+    }
+}
 
 //void DataSource::removeLastTroop()
 //{
