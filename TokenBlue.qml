@@ -122,8 +122,8 @@ Rectangle {
         when: troopExists==false
         onCompleted:  {
            battleModel2.setData(battleModel2.index(model.rowTr,model.colTr),false,258)
-           model.colTr=9
-           model.rowTr=9
+           model.colTr=0
+           model.rowTr=14
    }
     }
     Menu{

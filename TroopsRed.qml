@@ -31,7 +31,7 @@ Page {
                         dataSource.fetchTroops(team)
                         btnAddTroop.enabled = true
                         btnReady.enabled=true
-                        newTroops=true
+                        newTroops=false
                     }
                 }
                 Button {
@@ -41,6 +41,7 @@ Page {
                         gamelogic.startNewGame()
                         btnAddTroop.enabled = true
                         btnReady.enabled=true
+                        newTroops=true
                     }
                 }
             }
@@ -189,6 +190,7 @@ Page {
             }
             btnReady.enabled=false
             stackView.push("BattlefieldRed.qml")
+            gamelogic.waitForTurn(team)
         }
     }
 }

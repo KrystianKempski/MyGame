@@ -38,14 +38,14 @@ Item {
                 }
             }
         }
-        Button {
-            id: admin
-            height: 200
-            width: 605
-            text: "Admin"
-            anchors.horizontalCenter: parent.horizontalCenter
+//        Button {
+//            id: admin
+//            height: 200
+//            width: 605
+//            text: "Admin"
+//            anchors.horizontalCenter: parent.horizontalCenter
 
-        }
+//        }
         }
     }
 }

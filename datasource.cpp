@@ -20,9 +20,7 @@ void DataSource::fetchTroops()
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
     request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
     request.setRawHeader("versioning","false");
-  //  request.setRawHeader("key","AIzaSyBNOuhCUeadaiSwvWCvtdGQ-vziKqNSavM");
     m_NetReply=m_netManager->sendCustomRequest(request,"GET");
-  //    qInfo() << m_NetReply->readAll();
     connect(m_NetReply,&QIODevice::readyRead,this,&DataSource::dataReadyRead);
     connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::readFinished);
 }
@@ -78,13 +76,10 @@ void DataSource::readFinished()
     if(!m_NetReply->error()){
         //turn data into troop stats values
         QJsonDocument doc = QJsonDocument::fromJson(*m_dataBuffer);
-       // qInfo() << *m_dataBuffer;
         QJsonObject data1 =doc.object();
         QJsonValue dataUpdate = data1["dataUpdate"];
         if(dataUpdate.toInt()!=m_dataUpdate) {                          //sprawdzanie czy zaszły zmiany na serwerze
             m_dataUpdate=dataUpdate.toInt();
-            //QJsonValue consoleLine = data1["consoleLine"];
-            //QJsonValue chatLine = data1["chatLine"];
             setTeamTurn(data1["teamTurn"].toBool());                   //ustalenie do kogo należy tura
             setTurn(data1["turn"].toInt());                             //ustalenie tury
             if(0!=dataItems(true).size()+dataItems(false).size()) {
@@ -163,7 +158,6 @@ void DataSource::readFinished()
                 if(i>=dataItems(true).size()+dataItems(false).size()) addTroop(troop,team.toBool());      //dodawanie oddziału do drużyn
             }
             m_dataBuffer->clear();
-            //  writeConsole("pobrano jednostki");
             emit troopChanged();
             qInfo() << "readFinnished";
         }
@@ -230,6 +224,7 @@ short DataSource::turn() const
     return m_turn;
 }
 
+
 void DataSource::setTokenIn(int row, int col, bool val)
 {
     m_tokenIn->replace(row*m_cellRows+col,val);
@@ -276,6 +271,12 @@ void DataSource::setTurn(short turn)
     emit turnChanged(m_turn);
 }
 
+void DataSource::setInfo(QString info)
+{
+    m_console=m_console+ "\r\n"+info;
+    emit consoleChanged(m_console);
+
+}
 
 QList<Troop*> DataSource::dataItems(bool team) const
 {
@@ -285,50 +286,6 @@ QList<Troop*> DataSource::dataItems(bool team) const
 void DataSource::dataReadyRead()
 {
     m_dataBuffer->append(m_NetReply->readAll());
-}
-
-void DataSource::addTroopRow()
-{
-    //    const QUrl API_ENDPOINT("http://localhost:3000/troops");
-    //    qInfo() << API_ENDPOINT;
-    //    QNetworkRequest request;
-    //    request.setUrl(API_ENDPOINT);
-
-    //    QJsonArray troopsArray;
-
-    //    //  QJsonArray array;
-    //    for(int i=0;i<m_troops.size();i++){
-
-    //        QJsonObject staty1;
-    //        Troop * troop = m_troops.at(i);
-    //        troop->write(staty1);
-
-    //        qInfo() << "name: " << troop->name();
-    //        qInfo() << "staty1: " <<staty1;
-    //        qInfo() << "statlist" <<troop->statList();
-    //        troopsArray.append(staty1);
-    //    }
-    //    qInfo() << troopsArray;
-    //    //doc.setArray(array);
-    //    // QJsonObject data;
-    //    // data.insert("troops",array);
-    //    QJsonObject json;
-    //    json.insert("troops",troopsArray);
-    //    //        json.insert("title","xxxx");
-    //    //        json.insert("","xxxx");
-    //    //        QJsonDocument jsonDoc(json);
-    //    QJsonDocument doc(json);
-    //    qInfo() << "doc : " << doc;
-    //    QByteArray jsonData= doc.toJson();
-    //    // QByteArray data= doc.toJson();
-    //    qInfo() <<"data: "<< jsonData
-    //              ;
-    //    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json; charset=UTF-8");
-    //    //    request.setHeader(QNetworkRequest::ContentLengthHeader,QByteArray::number(jsonData.size()));
-    //    m_NetReply=m_netManager->post(request,jsonData);
-    //    qInfo() <<m_NetReply->errorString();
-
-    //    connect(m_NetReply,&QNetworkReply::finished,this,&DataSource::writeFinished);
 }
 
 void DataSource::addTroop(Troop *value,bool team)

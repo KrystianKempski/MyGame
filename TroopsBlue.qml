@@ -29,6 +29,7 @@ Page {
                         dataSource.fetchTroops(team)
                         btnAddTroop.enabled = true
                         btnReady.enabled=true
+                        newTroops=false
                     }
                 }
                 Button {
@@ -181,6 +182,7 @@ Page {
             }
             btnReady.enabled=false
             stackView.push("BattlefieldBlue.qml")
+            gamelogic.waitForTurn(team)
         }
     }
 }

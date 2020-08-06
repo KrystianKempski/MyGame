@@ -13,7 +13,7 @@ ApplicationWindow {
     visible: true
     width: 1140
     height: 650
-    title: qsTr("Hello World")
+    title: qsTr("Taktyczny symulator bitwy")
     FileDialog{
         id: openDialog
         title: "Please chose a file"

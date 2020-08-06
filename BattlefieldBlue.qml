@@ -9,11 +9,8 @@ import Qt.labs.qmlmodels 1.0
 Page {
     id: battlefieldBlue
     visible: true
-
-    property int widthProp
-    property int heightProp
-    width: parent.width//widthProp
-    height: parent.height//heightProp
+    width: parent.width
+    height: parent.height
     title: qsTr("Hello World")
     property int cellSize: 64
 
@@ -141,12 +138,10 @@ Page {
                     TextArea.flickable: TextArea {
                         id:txtConsole
                         font.pixelSize: 12
-                      //  width: parent.width
                         height: 200
                         color:  "black"
                         wrapMode: TextArea.Wrap
                         text:dataSource.console
-
                         onTextChanged: {
                             flickable.contentY = txtConsole.height - flickable.height
                         }
@@ -163,7 +158,7 @@ Page {
         id: root
         anchors.left: leftToolbar.right
         width: battlefieldBlue.width-400
-        height: parent.height//-cellSize
+        height: parent.height
         ScrollView{
             id: view
             height: parent.height
@@ -206,53 +201,53 @@ Page {
         anchors.left: root.right
         width: 200
         height: parent.height
-        color: "grey"
-        Rectangle{
-            id: chat1
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
-            width: parent.width-10
-            height: parent.height-400
-            radius: 5
-            color: "white"
-            Flickable {
-                id: flickable2
-                anchors.fill: parent
-                contentWidth: parent.width
-                contentHeight: 500
-                flickableDirection: Flickable.VerticalFlick
-                clip: true
-                onContentHeightChanged: Qt.callLater(() => contentY = contentHeight - height)
-                TextArea.flickable: TextArea {
-                    id:txtChat
-                    font.pixelSize: 12
-                    width: parent.width
-                    height: 200
-                    color:  "black"
-                    wrapMode: TextArea.Wrap
-                    text: dataSource.chat
-                    readOnly: true
-                    onTextChanged: {
-                        flickable2.contentY = flickable2.height - flickable2.height
-                    }
-                }
-                contentY: contentHeight-height
-                ScrollBar.vertical: ScrollBar { }
-            }
-        }
-        TextField {
-            id: chatInput
-            anchors.top: chat1.bottom
-            anchors.right: parent.right
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
-            width: parent.width-10
-            height: 30
-            color: "black"
+        color: "royalblue"
+//        Rectangle{
+//            id: chat1
+//            anchors.top: parent.top
+//            anchors.right: parent.right
+//            anchors.rightMargin: 5
+//            anchors.topMargin: 5
+//            width: parent.width-10
+//            height: parent.height-400
+//            radius: 5
+//            color: "white"
+//            Flickable {
+//                id: flickable2
+//                anchors.fill: parent
+//                contentWidth: parent.width
+//                contentHeight: 500
+//                flickableDirection: Flickable.VerticalFlick
+//                clip: true
+//                onContentHeightChanged: Qt.callLater(() => contentY = contentHeight - height)
+//                TextArea.flickable: TextArea {
+//                    id:txtChat
+//                    font.pixelSize: 12
+//                    width: parent.width
+//                    height: 200
+//                    color:  "black"
+//                    wrapMode: TextArea.Wrap
+//                    text: dataSource.chat
+//                    readOnly: true
+//                    onTextChanged: {
+//                        flickable2.contentY = flickable2.height - flickable2.height
+//                    }
+//                }
+//                contentY: contentHeight-height
+//                ScrollBar.vertical: ScrollBar { }
+//            }
+//        }
+//        TextField {
+//            id: chatInput
+//            anchors.top: chat1.bottom
+//            anchors.right: parent.right
+//            anchors.rightMargin: 5
+//            anchors.topMargin: 5
+//            width: parent.width-10
+//            height: 30
+//            color: "black"
 
-        }
+//        }
 
         Rectangle{
           anchors.bottom: endTurn.top
@@ -317,17 +312,17 @@ Page {
 
         }
       }
-      Button {
-          id: btnSend
-          anchors.top: chatInput.bottom
-          anchors.topMargin: 4
-          anchors.right: chatInput.right
-          text: "send"
-          onClicked: {
-              dataSource.writeChat("Red: " +chatInput.text)
-              chatInput.text=""
-          }
-      }
+//      Button {
+//          id: btnSend
+//          anchors.top: chatInput.bottom
+//          anchors.topMargin: 4
+//          anchors.right: chatInput.right
+//          text: "send"
+//          onClicked: {
+//              dataSource.writeChat("Blue: " +chatInput.text)
+//              chatInput.text=""
+//          }
+//      }
 
 
   }

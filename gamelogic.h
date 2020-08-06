@@ -21,6 +21,8 @@ public:
     Q_INVOKABLE void removeTroop(bool team, short index);
     Q_INVOKABLE void addTroop(bool team, short index);
     Q_INVOKABLE void startNewGame();
+    Q_INVOKABLE void waitForTurn(bool team);
+    void update();
 
 signals:
     void dataChanged();
@@ -28,7 +30,8 @@ private:
     void resetMoves();
     DataSource* m_dataSource;
 //    short m_turn;
-  //  bool m_teamTurn;
+    bool m_teamTurn;
+    QTimer m_timer;
 
 
 };
