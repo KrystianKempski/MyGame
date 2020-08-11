@@ -1,8 +1,9 @@
-import QtQuick 2.13
-import QtQuick.Controls 2.5
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
 import Qt.labs.calendar 1.0
 import QtQuick.Layouts 1.3
+import QtQml.Models 2.12
 import Qt.labs.qmlmodels 1.0
 
 Page {
@@ -36,11 +37,21 @@ Page {
                     id: btnClearTroops
                     text: "Stwórz nowe oddziały"
                     onClicked: {
-                        gamelogic.startNewGame()
+                        gamelogic.clearAllTroops()
                         btnAddTroop.enabled = true
                         btnReady.enabled=true
                         newTroops=true
                     }
+                }
+                CheckBox{
+                    id: newGame
+                    text: "Nowa gra?"
+                    checked: false
+                }
+                CheckBox{
+                    id: resetPosition
+                    text: "Zresetować pozycje?"
+                    checked: false
                 }
             }
             ScrollView{
@@ -175,10 +186,15 @@ Page {
         height: 150
         font.pixelSize: 18
         onClicked: {
-            if(newTroops){
-                for(var i=0;i<rmvButtons.count;i++){
-                    gamelogic.resetTroop(i,team)
-                }
+            if(newTroops) gamelogic.resetAllTroops(team)
+            if(newGame.checkState) {
+                gamelogic.startNewGame()
+                gamelogic.resetTroopsPosition(team)
+                gamelogic.resetAllTroops(team)
+            }
+            if(resetPosition.checkState){
+                gamelogic.resetTroopsPosition(team)
+                gamelogic.resetAllTroops(team)
             }
             btnReady.enabled=false
             stackView.push("BattlefieldBlue.qml")

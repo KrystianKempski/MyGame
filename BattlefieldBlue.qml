@@ -1,9 +1,9 @@
 
-import QtQuick 2.14
+import QtQuick 2.12
 import QtQuick.Window 2.12
-import QtQuick.Controls 2.5
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.2
-import QtQml.Models 2.1
+import QtQml.Models 2.12
 import Qt.labs.qmlmodels 1.0
 
 Page {
@@ -202,75 +202,107 @@ Page {
         width: 200
         height: parent.height
         color: "royalblue"
-//        Rectangle{
-//            id: chat1
-//            anchors.top: parent.top
-//            anchors.right: parent.right
-//            anchors.rightMargin: 5
-//            anchors.topMargin: 5
-//            width: parent.width-10
-//            height: parent.height-400
-//            radius: 5
-//            color: "white"
-//            Flickable {
-//                id: flickable2
-//                anchors.fill: parent
-//                contentWidth: parent.width
-//                contentHeight: 500
-//                flickableDirection: Flickable.VerticalFlick
-//                clip: true
-//                onContentHeightChanged: Qt.callLater(() => contentY = contentHeight - height)
-//                TextArea.flickable: TextArea {
-//                    id:txtChat
-//                    font.pixelSize: 12
-//                    width: parent.width
-//                    height: 200
-//                    color:  "black"
-//                    wrapMode: TextArea.Wrap
-//                    text: dataSource.chat
-//                    readOnly: true
-//                    onTextChanged: {
-//                        flickable2.contentY = flickable2.height - flickable2.height
-//                    }
-//                }
-//                contentY: contentHeight-height
-//                ScrollBar.vertical: ScrollBar { }
-//            }
-//        }
-//        TextField {
-//            id: chatInput
-//            anchors.top: chat1.bottom
-//            anchors.right: parent.right
-//            anchors.rightMargin: 5
-//            anchors.topMargin: 5
-//            width: parent.width-10
-//            height: 30
-//            color: "black"
 
-//        }
+        Item{
+            id: info
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+            anchors.topMargin: 5
+            width: parent.width-10
+            height: parent.height-145
+
+            Flickable {
+                id: flickable2
+                anchors.fill: parent
+                contentWidth: parent.width
+                contentHeight: 1000
+                flickableDirection: Flickable.VerticalFlick
+                clip: true
+                TextArea.flickable: TextArea {
+                    id:txtInfo
+                    font.pixelSize: 12
+                    color:  "black"
+                    text: "W taktycznym symulatorze ścierają się dwie armie - Czerwona i Niebieska. Każda armia ma oddziały opisane przez kilka statystyk. Oddziały poruszają się po plannszy zgodnie z ich prędkością - speed. Każdy oddział może poruszyć się raz i zaatakować, lub zaatakować dwa razy. Oddział może zaatakować tylko jednostki w swoim zasięgu (range). Zasięg 1 oznacza możliwość ataku jednostek położonych bezpośrednio przy prawej, lewej, górnej i dolnej krawędzi pola na którym stoi.Ataki wykonywane są na podstawie statystyk oddziału i rzutów kości, wykonywanych przez symulator. Wartość ataku (At) dodaje się do rzutu kości dwudziestościennej, po czym porównuje się go z obroną (Def) atakowanego oddziału. Jeśli oddział trafi, zadaje obrażenia w wysokości wartości obrażeń (Dmg) dodanych do rzutu kości sześciościennej. Na konsoli pojawi się informacja o ataku i jego rezultacie. Gdy armia wykona wszystkie ruchy należy zakończyć turę klikając przycisk Zakończ Turę.  Gra kończy się gdy wszystkie oddziały jednej drużyny ulegną zniszczeniu"
+                    wrapMode: TextArea.Wrap
+
+                }
+                contentY: contentHeight-height
+                ScrollBar.vertical: ScrollBar { }
+            }
+        }
+
+
+        //CZAT NIEAKTYWNY
+        //        Rectangle{
+        //            id: chat1
+        //            anchors.top: parent.top
+        //            anchors.right: parent.right
+        //            anchors.rightMargin: 5
+        //            anchors.topMargin: 5
+        //            width: parent.width-10
+        //            height: parent.height-400
+        //            radius: 5
+        //            color: "white"
+        //            Flickable {
+        //                id: flickable2
+        //                anchors.fill: parent
+        //                contentWidth: parent.width
+        //                contentHeight: 500
+        //                flickableDirection: Flickable.VerticalFlick
+        //                clip: true
+        //                onContentHeightChanged: Qt.callLater(() => contentY = contentHeight - height)
+        //                TextArea.flickable: TextArea {
+        //                    id:txtChat
+        //                    font.pixelSize: 12
+        //                    width: parent.width
+        //                    height: 200
+        //                    color:  "black"
+        //                    wrapMode: TextArea.Wrap
+        //                    text: dataSource.chat
+        //                    readOnly: true
+        //                    onTextChanged: {
+        //                        flickable2.contentY = flickable2.height - flickable2.height
+        //                    }
+        //                }
+        //                contentY: contentHeight-height
+        //                ScrollBar.vertical: ScrollBar { }
+        //            }
+        //        }
+        //        TextField {
+        //            id: chatInput
+        //            anchors.top: chat1.bottom
+        //            anchors.right: parent.right
+        //            anchors.rightMargin: 5
+        //            anchors.topMargin: 5
+        //            width: parent.width-10
+        //            height: 30
+        //            color: "black"
+
+        //        }
 
         Rectangle{
-          anchors.bottom: endTurn.top
-          anchors.horizontalCenter: rightToolBar.horizontalCenter
-          anchors.margins: 5
-         color: "beige"
-         border.color: "black"
-         border.width: 1
-         width: 154
-         height: 60
+            anchors.bottom: endTurn.top
+            anchors.horizontalCenter: rightToolBar.horizontalCenter
+            anchors.margins: 5
+            color: "beige"
+            border.color: "black"
+            border.width: 1
+            width: 154
+            height: 60
 
             Text {
-              id: txtTeamTurn
-               wrapMode:  Text.WordWrap
-               width: parent.width
-               height: parent.height
-               horizontalAlignment:  Text.AlignHCenter
-               verticalAlignment: Text.AlignVCenter
-               font.bold: true
-              visible: dataSource.turn >=0? true : false
-              color: dataSource.teamTurn ? "red" : "blue"
-              text: dataSource.teamTurn ? "TURA CZERWONYCH" : "TURA NIEBIESKICH"
-          }
+                id: txtTeamTurn
+                wrapMode:  Text.WordWrap
+                width: parent.width
+                height: parent.height
+                horizontalAlignment:  Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true
+                visible: dataSource.turn >=0? true : false
+                color: dataSource.teamTurn ? "red" : "blue"
+                text: dataSource.teamTurn ? "TURA CZERWONYCH" : "TURA NIEBIESKICH"
+            }
         }
 
         Row {
@@ -279,53 +311,53 @@ Page {
             anchors.horizontalCenter: rightToolBar.horizontalCenter
             spacing: 4
             anchors.bottomMargin: 5
-        Rectangle{
-            id: rectTurn
-            anchors.margins: 2
-            color: "beige"
-            border.color: "black"
-            border.width: 1
+            Rectangle{
+                id: rectTurn
+                anchors.margins: 2
+                color: "beige"
+                border.color: "black"
+                border.width: 1
 
-            width: 50
-            height: btnEndTurn.height
-          Text {
-              id: txtTurn
-              wrapMode:  Text.WordWrap
-              width: parent.width
-              height: parent.height
-              horizontalAlignment:  Text.AlignHCenter
-              verticalAlignment: Text.AlignVCenter
-              visible: dataSource.turn >=0? true : false
-              font.bold: true
-              text: dataSource.turn >=0 ? "TURA \r\n"+dataSource.turn :"TURA \r\n -"
-          }
-        }
-        Button {
-
-            enabled: dataSource.turn >=0 ? !dataSource.teamTurn : false
-            id: btnEndTurn
-            height: 70
-            text: "End turn"
-            onClicked: {
-                gamelogic.endTurn(false)
+                width: 50
+                height: btnEndTurn.height
+                Text {
+                    id: txtTurn
+                    wrapMode:  Text.WordWrap
+                    width: parent.width
+                    height: parent.height
+                    horizontalAlignment:  Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    visible: dataSource.turn >=0? true : false
+                    font.bold: true
+                    text: dataSource.turn >=0 ? "TURA \r\n"+dataSource.turn :"TURA \r\n -"
+                }
             }
+            Button {
 
+                enabled: dataSource.turn >=0 ? !dataSource.teamTurn : false
+                id: btnEndTurn
+                height: 70
+                text: "Zakończ turę"
+                onClicked: {
+                    gamelogic.endTurn(false)
+                }
+
+            }
         }
-      }
-//      Button {
-//          id: btnSend
-//          anchors.top: chatInput.bottom
-//          anchors.topMargin: 4
-//          anchors.right: chatInput.right
-//          text: "send"
-//          onClicked: {
-//              dataSource.writeChat("Blue: " +chatInput.text)
-//              chatInput.text=""
-//          }
-//      }
+        //      Button {
+        //          id: btnSend
+        //          anchors.top: chatInput.bottom
+        //          anchors.topMargin: 4
+        //          anchors.right: chatInput.right
+        //          text: "send"
+        //          onClicked: {
+        //              dataSource.writeChat("Blue: " +chatInput.text)
+        //              chatInput.text=""
+        //          }
+        //      }
 
 
-  }
+    }
 
 }
 

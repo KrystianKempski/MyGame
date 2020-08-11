@@ -26,6 +26,21 @@ void GameLogic::waitForTurn(bool team)
     }
 }
 
+void GameLogic::resetTroopsPosition(bool team)
+{
+    short newRow;
+    team? newRow=3:newRow=12;
+    QJsonValue jNewRow(newRow);
+    for(int i=0;i<m_dataSource->dataItems(team).size();i++){
+        QJsonValue jNewColumn(i+3);
+        m_dataSource->setTokenIn(m_dataSource->dataItems(team).at(i)->statList().at(17).toInt(),m_dataSource->dataItems(team).at(i)->statList().at(18).toInt(),false);
+        m_dataSource->dataItems(team).at(i)->setStatList(18,jNewColumn);
+        m_dataSource->dataItems(team).at(i)->setStatList(17,jNewRow);
+        //m_dataSource->setTokenIn(row.toInt(),col.toInt(),true);
+    }
+    emit dataChanged();
+}
+
 void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
 {
     QString message="";
@@ -116,12 +131,14 @@ QStringList GameLogic::findEnemy(int row, int col, int range, bool team) const
 void GameLogic::removeTroop(bool team, short index)
 {
     m_dataSource->removeTroop(team,index);
+
     emit dataChanged();
 }
 
 void GameLogic::addTroop(bool aTeam,short index)
 {
     Troop *troop = new Troop;
+    short sRow;
     QJsonValue name("");
     QJsonValue type("");
     QJsonValue maxHp(20);
@@ -139,12 +156,8 @@ void GameLogic::addTroop(bool aTeam,short index)
     QJsonValue agi(0);
     QJsonValue end(0);
     QJsonValue will(0);
-    QJsonValue row;
-    if(aTeam) {
-        row=0;
-    }else{
-        row=14;
-    }
+    aTeam?  sRow=0: sRow=14;
+    QJsonValue row(sRow);
     QJsonValue col(3+index);
     QJsonValue id(index);
     QJsonValue team(aTeam);
@@ -187,10 +200,29 @@ void GameLogic::addTroop(bool aTeam,short index)
 
 void GameLogic::startNewGame()
 {
-    m_dataSource->dataItems(true).clear();
-    m_dataSource->dataItems(false).clear();
     m_dataSource->setTurn(1);
     m_dataSource->setTeamTurn(true);
+    resetMoves();
+    emit dataChanged();
+}
+
+void GameLogic::resetAllTroops(bool team)
+{
+    QJsonValue newMoves(false);
+    QJsonValue newAttacks(2);
+    QJsonValue troopActive(true);
+    for(int i=0;i<m_dataSource->dataItems(team).size();i++){
+        QJsonValue hp= m_dataSource->dataItems(team).at(i)->statList().at(2);
+        m_dataSource->dataItems(team).at(i)->setStatList(24,hp);
+        m_dataSource->dataItems(team).at(i)->setStatList(23,troopActive);
+    }
+    resetMoves();
+     emit dataChanged();
+}
+
+void GameLogic::removeAllTroops(bool team)
+{
+    m_dataSource->dataItems(team).clear();
     emit dataChanged();
 }
 void GameLogic::update()

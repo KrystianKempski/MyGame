@@ -1,6 +1,6 @@
 import QtQuick 2.12
-import QtQml.Models 2.1
-import QtQuick.Controls 2.5
+import QtQml.Models 2.12
+import QtQuick.Controls 2.12
 
 Rectangle {
     id: token

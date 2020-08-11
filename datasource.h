@@ -50,7 +50,6 @@ signals:
     void postRemoveTroopBlue();
     Q_INVOKABLE void troopChanged();
     Q_INVOKABLE void consoleChanged(QString console);
-    //void tokenIn(int row,int col,bool val);
     void chatChanged(QString chat);
     void teamTurnChanged(bool teamTurn);
     void turnChanged(short turn);

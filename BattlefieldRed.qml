@@ -1,9 +1,9 @@
 
-import QtQuick 2.14
+import QtQuick 2.12
 import QtQuick.Window 2.12
-import QtQuick.Controls 2.14
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.2
-import QtQml.Models 2.1
+import QtQml.Models 2.12
 import Qt.labs.qmlmodels 1.0
 
 Page {
@@ -201,6 +201,35 @@ Page {
         width: 200
         height: parent.height
         color: "lightcoral"
+
+        Item{
+            id: info
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+            anchors.topMargin: 5
+            width: parent.width-10
+            height: parent.height-145
+
+            Flickable {
+                id: flickable2
+                anchors.fill: parent
+                contentWidth: parent.width
+                contentHeight: 1000
+                flickableDirection: Flickable.VerticalFlick
+                clip: true
+                TextArea.flickable: TextArea {
+                    id:txtInfo
+                    font.pixelSize: 12
+                    color:  "black"
+                    text: "W taktycznym symulatorze ścierają się dwie armie - Czerwona i Niebieska. Każda armia ma oddziały opisane przez kilka statystyk. Oddziały poruszają się po plannszy zgodnie z ich prędkością - speed. Każdy oddział może poruszyć się raz i zaatakować, lub zaatakować dwa razy. Oddział może zaatakować tylko jednostki w swoim zasięgu (range). Zasięg 1 oznacza możliwość ataku jednostek położonych bezpośrednio przy prawej, lewej, górnej i dolnej krawędzi pola na którym stoi.Ataki wykonywane są na podstawie statystyk oddziału i rzutów kości, wykonywanych przez symulator. Wartość ataku (At) dodaje się do rzutu kości dwudziestościennej, po czym porównuje się go z obroną (Def) atakowanego oddziału. Jeśli oddział trafi, zadaje obrażenia w wysokości wartości obrażeń (Dmg) dodanych do rzutu kości sześciościennej. Na konsoli pojawi się informacja o ataku i jego rezultacie. Gdy armia wykona wszystkie ruchy należy zakończyć turę klikając przycisk Zakończ Turę.  Gra kończy się gdy wszystkie oddziały jednej drużyny ulegną zniszczeniu"
+                    wrapMode: TextArea.Wrap
+
+                }
+                contentY: contentHeight-height
+                ScrollBar.vertical: ScrollBar { }
+            }
+        }
 //        Rectangle{
 //            id: chat1
 //            anchors.top: parent.top
@@ -302,7 +331,7 @@ Page {
               enabled: dataSource.turn >=0 ? dataSource.teamTurn : false
               id: btnReady
               height: 70
-              text: "End turn"
+              text: "Zakończ turę"
               onClicked: {
                   gamelogic.endTurn(true)
               }

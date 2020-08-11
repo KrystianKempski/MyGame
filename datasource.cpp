@@ -31,8 +31,6 @@ void DataSource::changeItem()
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
    request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
     request.setRawHeader("versioning","false");
-   // request.setRawHeader("key","AIzaSyBNOuhCUeadaiSwvWCvtdGQ-vziKqNSavM");
-    //  QJsonArray array;
     QJsonArray troopsArray;
     for(int i=0;i<m_troopsRed.size();i++){
         QJsonObject troopRedStats;
@@ -74,7 +72,6 @@ void DataSource::changeItem()
 void DataSource::readFinished()
 {
     if(!m_NetReply->error()){
-        //turn data into troop stats values
         QJsonDocument doc = QJsonDocument::fromJson(*m_dataBuffer);
         QJsonObject data1 =doc.object();
         QJsonValue dataUpdate = data1["dataUpdate"];
@@ -313,12 +310,5 @@ void DataSource::removeTroop(bool team, short index)
         emit postRemoveTroopBlue();
     }
 }
-
-//void DataSource::removeLastTroop()
-//{
-//    if(!m_troops.isEmpty()){
-//        m_troops.removeLast();
-//    }
-//}
 
 

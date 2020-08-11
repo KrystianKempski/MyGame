@@ -1,8 +1,8 @@
-import QtQuick 2.13
+import QtQuick 2.12
 import QtQuick.Window 2.12
-import QtQuick.Controls 2.5
+import QtQuick.Controls 2.12
 import QtQuick.Dialogs 1.2
-import QtQml.Models 2.1
+import QtQml.Models 2.12
 import Qt.labs.qmlmodels 1.0
 
         Item{
@@ -15,23 +15,18 @@ import Qt.labs.qmlmodels 1.0
             anchors.fill: parent
 
             BattlefieldRed {
-                widthProp: parent.width
-                heightProp: parent.height
+
                 visible: parent.pageNum===1
             }
             TroopsRed {
-                widthProp: parent.width
-                heightProp: parent.height
+
                 visible: parent.pageNum===2
             }
             BattlefieldBlue {
-                widthProp: parent.width
-                heightProp: parent.height
+
                 visible: parent.pageNum===3
             }
             TroopsBlue {
-                widthProp: parent.width
-                heightProp: parent.height
                 visible: parent.pageNum===4
             }
         }

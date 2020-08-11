@@ -21,7 +21,10 @@ public:
     Q_INVOKABLE void removeTroop(bool team, short index);
     Q_INVOKABLE void addTroop(bool team, short index);
     Q_INVOKABLE void startNewGame();
+    Q_INVOKABLE void resetAllTroops(bool team);
+    Q_INVOKABLE void removeAllTroops(bool team);
     Q_INVOKABLE void waitForTurn(bool team);
+    Q_INVOKABLE void resetTroopsPosition(bool team);
     void update();
 
 signals:

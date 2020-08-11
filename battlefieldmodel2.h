@@ -12,7 +12,6 @@ public:
         cellAvalibleRole=Qt::UserRole+1,
         cellTokenInRole=Qt::UserRole+2,
         cellColorRole=Qt::UserRole+3
-
     };
     enum cellColors{
         cellColorTrans=0,
@@ -20,8 +19,6 @@ public:
         cellCorolRed=2
     };
     explicit BattlefieldModel2(QObject *parent = nullptr);
-
-    // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -36,11 +33,8 @@ public:
     Q_INVOKABLE void updateModel();
 private:
     DataSource  *m_dataSource;
-
     int m_cellRows;
     int m_cellColumns;
-
-
 
 };
 
