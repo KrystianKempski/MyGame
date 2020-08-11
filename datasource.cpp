@@ -32,15 +32,13 @@ void DataSource::changeItem()
    request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
     request.setRawHeader("versioning","false");
     QJsonArray troopsArray;
-    for(int i=0;i<m_troopsRed.size();i++){
-        QJsonObject troopRedStats;
-        Troop * troop = m_troopsRed.at(i);
+    QJsonObject troopRedStats;
+    for(auto troop : m_troopsRed){
         troop->write(troopRedStats);
         troopsArray.append(troopRedStats);
     }
-    for(int i=0;i<m_troopsBlue.size();i++){
-        QJsonObject troopBlueStats;
-        Troop * troop = m_troopsBlue.at(i);
+    QJsonObject troopBlueStats;
+    for(auto troop: m_troopsBlue){
         troop->write(troopBlueStats);
         troopsArray.append(troopBlueStats);
     }

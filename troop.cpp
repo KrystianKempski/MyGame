@@ -34,38 +34,6 @@ Troop::Troop(QObject *parent) : QObject(parent)
     m_statList->append("");      //25 - BLANK3 sprawdza czy token poruszał się w danej turze
 }
 
-
-//void Troop::read()
-//{
-
-//    m_name= m_statList->at(0).toString();
-//    m_type = m_statList->at(1).toString();
-//    m_hp = m_statList->at(2).toInt();
-//    m_aVal = m_statList->at(3).toInt();
-//    m_def = m_statList->at(4).toInt();
-//    m_dDice = m_statList->at(5).toInt();
-//    m_dmg = m_statList->at(6).toInt();
-//    m_aType = m_statList->at(7).toString();
-//    m_speed = m_statList->at(8).toInt();
-//    m_aCharge = m_statList->at(9).toInt();
-//    m_aCrowd = m_statList->at(10).toInt();
-//    m_morale = m_statList->at(11).toInt();
-//    m_range = m_statList->at(12).toInt();
-//    m_str = m_statList->at(13).toInt();
-//    m_agi = m_statList->at(14).toInt();
-//    m_end = m_statList->at(15).toInt();
-//    m_will = m_statList->at(16).toInt();
-//    m_row = m_statList->at(17).toInt();
-//    m_col= m_statList->at(18).toInt();
-//    m_id= m_statList->at(19).toInt();
-//    m_team= m_statList->at(20).toBool();
-//    m_moved = m_statList->at(21).toInt();
-//    m_attacked = m_statList->at(22).toInt();
-//    m_blank1 = m_statList->at(23).toInt();
-//    m_blank2 = m_statList->at(24).toInt();
-//    m_blank3 = m_statList->at(25).toInt();
-//}
-
 void Troop::write(QJsonObject &json) const
 {
 
@@ -97,31 +65,10 @@ void Troop::write(QJsonObject &json) const
     json["BLANK3"] = m_statList->at(25).toInt();
 }
 
-//int Troop::str() const
-//{
-//    return m_str;
-//}
-
-//void Troop::setStr(int str)
-//{
-//    m_str = str;
-//}
-
-//QString Troop::name() const
-//{
-//    return m_name;
-//}
-
-//void Troop::setName(const QString &name)
-//{
-//    m_name = name;
-//}
-
 QJsonArray Troop::statList() const
 {
     return *m_statList;
 }
-
 
 void Troop::setStatList(int index, QJsonValue &value)
 {

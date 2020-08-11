@@ -15,8 +15,7 @@ int TableModel2::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return 9;//m_dataSource->dataItems().at(0)->statList().size();
-
+    return 9;
 }
 
 QVariant TableModel2::data(const QModelIndex &index, int role) const
