@@ -183,8 +183,9 @@ void TableModelBlue::setDataSource(DataSource *dataSource)
     if(m_dataSource && m_signalConnected) m_dataSource->disconnect(this);
     m_dataSource = dataSource;
 
+
     connect(m_dataSource,&DataSource::preInsertTroopBlue,this,[=](){
-        const int index = m_dataSource->dataItems(m_team).size();
+            const int index = m_dataSource->dataItems(m_team).size();
         beginInsertRows(QModelIndex(),index,index);
     });
 

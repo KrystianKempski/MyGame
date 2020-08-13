@@ -190,7 +190,9 @@ Page {
             if(newGame.checkState) {
                 gamelogic.startNewGame()
                 gamelogic.resetTroopsPosition(team)
+                gamelogic.resetTroopsPosition(!team)
                 gamelogic.resetAllTroops(team)
+                gamelogic.resetAllTroops(!team)
             }
             if(resetPosition.checkState){
                 gamelogic.resetTroopsPosition(team)

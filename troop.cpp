@@ -1,11 +1,9 @@
 #include "troop.h"
 #include <QtDebug>
-
 Troop::Troop(QObject *parent) : QObject(parent)
 
 {
     m_statList = new QJsonArray();
-
     m_statList->append("");      //0 - ID   id
     m_statList->append("");      //1 - TEAM drużyna
     m_statList->append("");      //2 - NAME nazwa jednostki
@@ -33,6 +31,12 @@ Troop::Troop(QObject *parent) : QObject(parent)
     m_statList->append("");      //24 - BLANK2 sprawdza czy token poruszał się w danej turze
     m_statList->append("");      //25 - BLANK3 sprawdza czy token poruszał się w danej turze
 }
+
+Troop::~Troop()
+{
+    delete m_statList;
+}
+
 
 void Troop::write(QJsonObject &json) const
 {
@@ -64,7 +68,6 @@ void Troop::write(QJsonObject &json) const
     json["HP"] = m_statList->at(24).toInt();
     json["BLANK3"] = m_statList->at(25).toInt();
 }
-
 QJsonArray Troop::statList() const
 {
     return *m_statList;

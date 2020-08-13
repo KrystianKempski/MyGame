@@ -87,9 +87,9 @@ void DataSource::readFinished()
             troopsArray = troopsObject["troops"].toArray();
             int troopRedIndex=0;
             int troopBlueIndex=0;
-            m_tokenIn->fill(false); //
+            m_tokenIn->fill(false);
+            Troop *troop = new Troop(this);;
             for(int i=0;i<troopsArray.size();i++){
-                Troop *troop;
                 QJsonObject object = troopsArray.at(i).toObject();
                 QJsonValue name = object["NAME"];
                 QJsonValue type = object["TYPE"];
@@ -150,8 +150,12 @@ void DataSource::readFinished()
                 troop->setStatList(24,hp);
                 troop->setStatList(25,blank3);
                 setTokenIn(row.toInt(),col.toInt(),true);
+
                 if(i>=dataItems(true).size()+dataItems(false).size()) addTroop(troop,team.toBool());      //dodawanie oddziału do drużyn
+
             }
+            troop=nullptr;
+            delete troop;
             m_dataBuffer->clear();
             emit troopChanged();
             qInfo() << "readFinnished";
@@ -162,6 +166,7 @@ void DataSource::readFinished()
         qInfo() << m_NetReply->errorString();
         writeConsole("Błąd! \r\n"+m_NetReply->errorString());
     }
+
     m_dataBuffer->clear();
     m_netManager->clearConnectionCache();
     m_NetReply->close();

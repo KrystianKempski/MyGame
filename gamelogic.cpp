@@ -83,7 +83,7 @@ void GameLogic::attack(int attackerIndex, QString defenderName,bool team)
                 }
             }
         }
-        attackerTroop->deleteLater();
+       // attackerTroop->deleteLater();
         m_dataSource->writeConsole(message);
         emit dataChanged();
     }
@@ -199,7 +199,7 @@ void GameLogic::addTroop(bool aTeam,short index)
     m_dataSource->setTokenIn(row.toInt(),col.toInt(),true);
     m_dataSource->addTroop(troop,aTeam);
     emit dataChanged();
-    troop->deleteLater();
+    //troop->deleteLater();
 }
 
 void GameLogic::startNewGame()

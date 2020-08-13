@@ -7,8 +7,7 @@ AppWrapper::AppWrapper(QObject *parent,QGuiApplication *app) : QObject(parent)
 void AppWrapper::initialize()
 {
     DataSource * ds = new DataSource(this);
-  //  BattlefieldModel2 bat;
- //   Database ds2;
+
      m_battleModel.setDataSource(ds);
      m_troopModelBlue.setDataSource(ds);
     m_troopModelRed.setDataSource(ds);
@@ -40,5 +39,5 @@ void AppWrapper::initialize()
     m_engine.load(url);
     //connect(m_app,&QGuiApplication::aboutToQuit,[=](){qInfo()<<"test";} );
 
-
+  //  ds->deleteLater();
 }

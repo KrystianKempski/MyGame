@@ -17,4 +17,7 @@
         <file>piechota.png</file>
         <file>łucznicy.png</file>
     </qresource>
+    <qresource prefix="/other">
+        <file>zasady.txt</file>
+    </qresource>
 </RCC>
