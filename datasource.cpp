@@ -192,12 +192,12 @@ void DataSource::writeFinished()
     m_NetReply = nullptr;
 }
 
-QString DataSource::getCellColor(int row, int col) const
+QString DataSource::getCellColor(const short& row, const short& col) const
 {
     return m_cellColor->at(row*m_cellRows+col);
 }
 
-bool DataSource::getTokenIn(int row, int column) const
+bool DataSource::getTokenIn(const short& row, const short& column) const
 {
 
     return m_tokenIn->at(m_cellRows*row+column);
@@ -234,12 +234,12 @@ short DataSource::turn() const
 }
 
 
-void DataSource::setTokenIn(int row, int col, bool val)
+void DataSource::setTokenIn(const short& row, const short& col, const bool& val)
 {
     m_tokenIn->replace(row*m_cellRows+col,val);
 }
 
-void DataSource::setCellColor(int row, int col, QString val)
+void DataSource::setCellColor(const short& row, const short& col, QString val)
 {
     m_cellColor->replace(row*m_cellRows+col,val);
 }
@@ -286,7 +286,7 @@ void DataSource::setInfo(QString info)
 
 }
 
-QList<Troop*> DataSource::dataItems(bool team) const
+QList<Troop*> DataSource::dataItems(const bool& team) const
 {
     return team ? m_troopsRed: m_troopsBlue;
 }
@@ -296,7 +296,7 @@ void DataSource::dataReadyRead()
     m_dataBuffer->append(m_NetReply->readAll());
 }
 
-void DataSource::addTroop(Troop *value,bool team)
+void DataSource::addTroop(Troop *value,const bool& team)
 {
     if(team){
         emit preInsertTroopRed();
@@ -309,7 +309,7 @@ void DataSource::addTroop(Troop *value,bool team)
     }
 }
 
-void DataSource::removeTroop(bool team, short index)
+void DataSource::removeTroop(const bool& team, const short& index)
 {
     if(team){
         emit preRemoveTroopRed(index);
