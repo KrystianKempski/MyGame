@@ -19,6 +19,7 @@ class DataSource : public QObject
 
 public:
     explicit DataSource(QObject *parent = nullptr);
+    ~DataSource();
     Q_INVOKABLE void fetchTroops();
     Q_PROPERTY(QString console READ readConsole WRITE writeConsole NOTIFY consoleChanged);
     Q_PROPERTY(QString chat READ readChat WRITE writeChat NOTIFY chatChanged);
@@ -36,7 +37,6 @@ public:
    QString readChat() const;
    bool teamTurn() const;
    short turn() const;
-
    QString info() const;
 
 signals:

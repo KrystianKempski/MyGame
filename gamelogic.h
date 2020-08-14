@@ -32,7 +32,6 @@ signals:
 private:
     void resetMoves();
     DataSource* m_dataSource;
-//    short m_turn;
     bool m_teamTurn;
     QTimer m_timer;
 

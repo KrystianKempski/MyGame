@@ -13,6 +13,14 @@ DataSource::DataSource(QObject *parent) : QObject(parent)
     connect(m_refresh, &QTimer::timeout,this,&DataSource::fetchTroops);
     //m_refresh->start(2000);
 }
+
+DataSource::~DataSource()
+{
+    delete m_dataBuffer;
+    delete m_cellColor;
+    delete m_tokenIn;
+
+}
 void DataSource::fetchTroops()
 {
     QNetworkRequest request;
@@ -29,7 +37,7 @@ void DataSource::changeItem()
     QNetworkRequest request;
     request.setUrl(m_apiEndpoint);
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-   request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
+    request.setRawHeader("secret-key","$2b$10$iLVMet4iS5g49NNv/lD57uJp7WLNabTcWRBvQnZFPFJHCcpvFnYv.");
     request.setRawHeader("versioning","false");
     QJsonArray troopsArray;
     QJsonObject troopRedStats;
@@ -88,7 +96,7 @@ void DataSource::readFinished()
             int troopRedIndex=0;
             int troopBlueIndex=0;
             m_tokenIn->fill(false);
-            Troop *troop = new Troop(this);;
+            Troop *troop = new Troop(this);
             for(int i=0;i<troopsArray.size();i++){
                 QJsonObject object = troopsArray.at(i).toObject();
                 QJsonValue name = object["NAME"];
@@ -115,13 +123,13 @@ void DataSource::readFinished()
                 QJsonValue moved = object["MOVED"];
                 QJsonValue attacked = object["ATTACKS"];
                 QJsonValue active = object["ACTIVE"];
-                 QJsonValue hp = object["HP"];
+                QJsonValue hp = object["HP"];
                 QJsonValue blank3 = object["BLANK3"];
 
                 if(i>=dataItems(true).size()+dataItems(false).size()){
                     troop = new Troop(this);
                 }else{
-                    troop= dataItems(team.toBool()).at(team.toBool() ? troopRedIndex++ : troopBlueIndex++);
+                    troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
                 }
                 troop->setStatList(0,name);
                 troop->setStatList(1,type);
@@ -156,6 +164,7 @@ void DataSource::readFinished()
             }
             troop=nullptr;
             delete troop;
+            troop=nullptr;
             m_dataBuffer->clear();
             emit troopChanged();
             qInfo() << "readFinnished";
@@ -229,7 +238,6 @@ void DataSource::setTokenIn(int row, int col, bool val)
 {
     m_tokenIn->replace(row*m_cellRows+col,val);
 }
-
 
 void DataSource::setCellColor(int row, int col, QString val)
 {
