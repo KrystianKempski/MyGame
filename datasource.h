@@ -25,11 +25,11 @@ public:
     Q_PROPERTY(QString chat READ readChat WRITE writeChat NOTIFY chatChanged);
     Q_PROPERTY(bool teamTurn READ teamTurn WRITE setTeamTurn NOTIFY teamTurnChanged);
     Q_PROPERTY(short turn READ turn WRITE setTurn NOTIFY turnChanged);
-    QList<Troop*> dataItems(const bool& team) const;
-    Q_INVOKABLE void addTroop(Troop *value,const bool& team);
-    Q_INVOKABLE void removeTroop(const bool& team, const short& index);
-    Q_INVOKABLE QString getCellColor(const short& row, const short& column) const;
-    Q_INVOKABLE bool getTokenIn(const short& row, const short& column) const;
+    QList<Troop*> dataItems(bool team) const;
+    Q_INVOKABLE void addTroop(Troop *value,bool team);
+    Q_INVOKABLE void removeTroop(bool team, short index);
+    Q_INVOKABLE QString getCellColor(int row, int column) const;
+    Q_INVOKABLE bool getTokenIn(int row, int column) const;
     Q_INVOKABLE short getCellRowCount() const;
     Q_INVOKABLE short getCellColumnCount() const;
     void initialize();
@@ -37,6 +37,7 @@ public:
    QString readChat() const;
    bool teamTurn() const;
    short turn() const;
+
    QString info() const;
 
 signals:
@@ -61,8 +62,8 @@ private slots:
     void writeFinished();
 public slots:
     Q_INVOKABLE void changeItem();
-    Q_INVOKABLE void setTokenIn(const short& row, const short& column, const bool& val);
-    Q_INVOKABLE void setCellColor(const short& row, const short& column, QString val);
+    Q_INVOKABLE void setTokenIn(int row, int column, bool val);
+    Q_INVOKABLE void setCellColor(int row, int column, QString val);
     void writeConsole(QString console);
     void writeChat(QString chat);
     void setTeamTurn(bool teamTurn);

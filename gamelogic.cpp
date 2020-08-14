@@ -10,14 +10,14 @@ void GameLogic::startGame()
     resetMoves();
 }
 
-void GameLogic::endTurn(const bool& team)
+void GameLogic::endTurn(bool team)
 {
     m_dataSource->setTeamTurn(!team);
     if(team) m_dataSource->setTurn(m_dataSource->turn()+1);
     resetMoves();
     waitForTurn(team);
 }
-void GameLogic::waitForTurn(const bool& team)
+void GameLogic::waitForTurn(bool team)
 {
     if(m_dataSource->teamTurn()!=team){
         team ? m_dataSource->setInfo("Rozpoczynanie tury niebieskich") : m_dataSource->setInfo("Rozpoczynanie tury czerwonych");
@@ -26,7 +26,7 @@ void GameLogic::waitForTurn(const bool& team)
     }
 }
 
-void GameLogic::resetTroopsPosition(const bool& team)
+void GameLogic::resetTroopsPosition(bool team)
 {
     short newRow;
     team? newRow=3:newRow=12;
@@ -41,7 +41,7 @@ void GameLogic::resetTroopsPosition(const bool& team)
     emit dataChanged();
 }
 
-void GameLogic::attack(const short& attackerIndex,const QString& defenderName,const bool& team)
+void GameLogic::attack(short attackerIndex,const QString& defenderName,bool team)
 {
     Troop *attackerTroop = m_dataSource->dataItems(team).at(attackerIndex);
     QString message="";
@@ -109,7 +109,7 @@ void GameLogic::resetMoves()
 
     emit dataChanged();
 }
-void GameLogic::resetTroop(const short& index,const bool& team)
+void GameLogic::resetTroop(short index, bool team)
 {
     QJsonValue hp= m_dataSource->dataItems(team).at(index)->statList().at(2);
     m_dataSource->dataItems(team).at(index)->setStatList(24,hp);
@@ -117,7 +117,7 @@ void GameLogic::resetTroop(const short& index,const bool& team)
     m_dataSource->dataItems(team).at(index)->setStatList(23,troopActive);
     emit dataChanged();
 }
-QStringList GameLogic::findEnemy(const short& row, const short& col, const short& range, const bool& team) const
+QStringList GameLogic::findEnemy(short row, short col, short range, bool team) const
 {
     QStringList enemy;
     for(auto troop : m_dataSource->dataItems(team)){
@@ -131,14 +131,14 @@ QStringList GameLogic::findEnemy(const short& row, const short& col, const short
     return enemy;
 }
 
-void GameLogic::removeTroop(const bool& team, const short& index)
+void GameLogic::removeTroop(bool team, short index)
 {
     m_dataSource->removeTroop(team,index);
 
     emit dataChanged();
 }
 
-void GameLogic::addTroop(const bool& aTeam,const short& index)
+void GameLogic::addTroop(bool aTeam,short index)
 {
     Troop *troop = new Troop;
     short sRow;
@@ -210,7 +210,7 @@ void GameLogic::startNewGame()
     emit dataChanged();
 }
 
-void GameLogic::resetAllTroops(const bool& team)
+void GameLogic::resetAllTroops(bool team)
 {
     QJsonValue newMoves(false);
     QJsonValue newAttacks(2);
@@ -224,7 +224,7 @@ void GameLogic::resetAllTroops(const bool& team)
      emit dataChanged();
 }
 
-void GameLogic::removeAllTroops(const bool& team)
+void GameLogic::removeAllTroops(bool team)
 {
     m_dataSource->dataItems(team).clear();
     emit dataChanged();
