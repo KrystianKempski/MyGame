@@ -61,7 +61,7 @@ void GameLogic::attack(short attackerIndex,const QString& defenderName,bool team
         }
         attackerTroop->setStatList(22,jAttacks);                           //zmiana liczby ataków atakującego w datasource
         //atak:
-        for(auto troop : m_dataSource->dataItems(!team)){
+        for(auto &troop : m_dataSource->dataItems(!team)){
             if(troop->statList().at(0).toString()==defenderName){
                 short defence = troop->statList().at(4).toInt();
                 short attackRoll=QRandomGenerator::global()->bounded(1,20);
@@ -98,11 +98,11 @@ void GameLogic::resetMoves()
 {
     QJsonValue newMoves(false);
     QJsonValue newAttacks(2);
-    for(auto troop : m_dataSource->dataItems(true)){
+    for(auto &troop : m_dataSource->dataItems(true)){
         troop->setStatList(21,newMoves);
         troop->setStatList(22,newAttacks);
     }
-    for(auto troop : m_dataSource->dataItems(false)){
+    for(auto &troop : m_dataSource->dataItems(false)){
         troop->setStatList(21,newMoves);
         troop->setStatList(22,newAttacks);
     }
@@ -120,7 +120,7 @@ void GameLogic::resetTroop(short index, bool team)
 QStringList GameLogic::findEnemy(short row, short col, short range, bool team) const
 {
     QStringList enemy;
-    for(auto troop : m_dataSource->dataItems(team)){
+    for(auto &troop : m_dataSource->dataItems(team)){
         int enemyRow = troop->statList().at(17).toInt();
         int enemyCol = troop->statList().at(18).toInt();
         if(qAbs(enemyRow-row)<=range && qAbs(enemyCol-col)<=range &&
@@ -140,7 +140,7 @@ void GameLogic::removeTroop(bool team, short index)
 
 void GameLogic::addTroop(bool aTeam,short index)
 {
-    Troop *troop = new Troop;
+    Troop *troop = new Troop(this);
     short sRow;
     QJsonValue name("");
     QJsonValue type("");
@@ -199,7 +199,6 @@ void GameLogic::addTroop(bool aTeam,short index)
     m_dataSource->setTokenIn(row.toInt(),col.toInt(),true);
     m_dataSource->addTroop(troop,aTeam);
     emit dataChanged();
-    //troop->deleteLater();
 }
 
 void GameLogic::startNewGame()
@@ -215,7 +214,7 @@ void GameLogic::resetAllTroops(bool team)
     QJsonValue newMoves(false);
     QJsonValue newAttacks(2);
     QJsonValue troopActive(true);
-       for(auto troop : m_dataSource->dataItems(team)){
+       for(auto &troop : m_dataSource->dataItems(team)){
         QJsonValue hp= troop->statList().at(2);
         troop->setStatList(24,hp);
         troop->setStatList(23,troopActive);

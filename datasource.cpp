@@ -312,10 +312,13 @@ void DataSource::removeTroop(bool team, short index)
 {
     if(team){
         emit preRemoveTroopRed(index);
+        setTokenIn(m_troopsRed.at(index)->statList().at(17).toInt(),m_troopsRed.at(index)->statList().at(18).toInt(),false);
         m_troopsRed.removeAt(index) ;
+
         emit postRemoveTroopRed();
     }else{
         emit preRemoveTroopBlue(index);
+        setTokenIn(m_troopsBlue.at(index)->statList().at(17).toInt(),m_troopsBlue.at(index)->statList().at(18).toInt(),false);
         m_troopsBlue.removeAt(index) ;
         emit postRemoveTroopBlue();
     }
