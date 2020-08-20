@@ -22,43 +22,39 @@ QVariant TableModel2::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-
-    Troop *troop = m_dataSource->dataItems(m_team).at(index.row());
     switch (role) {
     case trHeaderRole:
         return m_header[index.column()];
     case trBodyRole:
-        return troop->statList().at(index.column()).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),index.column(),m_team).toVariant();
     case trNameRole:
-        return troop->statList().at(0).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::name,m_team).toVariant();
     case trSpeedRole:
-        return troop->statList().at(7).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::speed,m_team).toVariant();
     case trRowRole:
-        return troop->statList().at(17).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::row,m_team).toVariant();
     case trColRole:
-        return troop->statList().at(18).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::col,m_team).toVariant();
     case trMovedRole:
-        return troop->statList().at(21).toVariant();
-    case trUpdateRole:
-        return troop->statList().at(21).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::moved,m_team).toVariant();
     case trHpRole:
-        return troop->statList().at(24).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::hp,m_team).toVariant();
     case trActiveRole:
-        return troop->statList().at(23).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::active,m_team).toVariant();
     case trRangeRole:
-        return troop->statList().at(8).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::range,m_team).toVariant();
     case trTypeRole:
-        return troop->statList().at(1).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::type,m_team).toVariant();
     case trAttacksRole:
-        return troop->statList().at(22).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::attacks,m_team).toVariant();
     case trAttackValRole:
-        return troop->statList().at(3).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::atkVal,m_team).toVariant();
     case trDefenceRole:
-        return troop->statList().at(4).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::def,m_team).toVariant();
     case trDmgDiceRole:
-        return troop->statList().at(5).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::dmgDice,m_team).toVariant();
     case trDmgValRole:
-        return troop->statList().at(6).toVariant();
+        return m_dataSource->getStat<QJsonValue>(index.row(),DataSource::dmgVal,m_team).toVariant();
     default:
         qInfo() << "błąd roli!";
         qInfo() << role;
@@ -71,71 +67,39 @@ QVariant TableModel2::data(const QModelIndex &index, int role) const
 bool TableModel2::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if(index.row()<0 || index.row()>=m_dataSource->dataItems(m_team).size()) return false;
-    bool ok;
-    Troop *troop = m_dataSource->dataItems(m_team).at(index.row());
-    QJsonValue json;
-    json = value.toInt(&ok);
+    QJsonValue temp(value.toJsonValue());
     switch (role)
     {
     case trBodyRole:
     {
-        if(!ok){
-            if(value.toString()=="true"||value.toString()=="false"){
-                json = value.toBool();
-            }else{
-                json =value.toString();
-            }
-        }
-        if(troop->statList().at(index.column())!=json){
-            troop->setStatList(index.column(),json);
-            emit dataChanged(index,index, {role, trNameRole,trHpRole,trActiveRole,trRowRole,trColRole});
-            //emit troopChaged();
-            return true;
-        }
-        return false;
+        m_dataSource->setStat(index.row(),index.column(),m_team,temp);
+        emit dataChanged(index,index, {role, trNameRole,trHpRole,trActiveRole,trRowRole,trColRole});
+        return true;
+
     }
     case trRowRole:
     {
-        if(ok){
-            if(troop->statList().at(17)!=json){
-                troop->setStatList(17,json);
-                emit dataChanged(index,index,QVector<int>() << role);
-                return true;
-            }
-        }
-        return false;
+        m_dataSource->setStat(index.row(),DataSource::row,m_team,temp);
+        emit dataChanged(index,index, QVector<int>() << role);
+        return true;
     }
     case trColRole:
     {
-        if(ok){
-            if(troop->statList().at(18)!=json){
-                troop->setStatList(18,json);
-                emit dataChanged(index,index,QVector<int>() << role);
-                return true;
-            }
-        }
-        return false;
+        m_dataSource->setStat(index.row(),DataSource::col,m_team,temp);
+        emit dataChanged(index,index, QVector<int>() << role);
+        return true;
     }
     case trMovedRole:
     {
-        json=value.toBool();
-        if(troop->statList().at(21)!=json){
-            troop->setStatList(21,json);
-            emit dataChanged(index,index,QVector<int>() << role);
-            return true;
-        }
-        return false;
+        m_dataSource->setStat(index.row(),DataSource::moved,m_team,temp);
+        emit dataChanged(index,index, QVector<int>() << role);
+        return true;
     }
     case trAttacksRole:
     {
-        if(ok){
-            if(troop->statList().at(22)!=json){
-                troop->setStatList(22,json);
-                emit dataChanged(index,index,QVector<int>() << role);
-                return true;
-            }
-        }
-        return false;
+        m_dataSource->setStat(index.row(),DataSource::attacks,m_team,temp);
+        emit dataChanged(index,index, QVector<int>() << role);
+        return true;
     }
     default:
         return false;
@@ -186,7 +150,7 @@ void TableModel2::setDataSource(DataSource *dataSource)
 
 
     connect(m_dataSource,&DataSource::preInsertTroopRed,this,[=](){
-            const int index = m_dataSource->dataItems(m_team).size();
+        const int index = m_dataSource->dataItems(m_team).size();
         beginInsertRows(QModelIndex(),index,index);
     });
 

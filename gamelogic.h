@@ -14,12 +14,12 @@ public:
     explicit GameLogic(QObject *parent = nullptr);
     Q_INVOKABLE void startGame();
     Q_INVOKABLE void endTurn(bool team);
-    Q_INVOKABLE void attack(short attackerIndex,const QString& defenderName,bool team);
+    Q_INVOKABLE void attack(quint8 attackerIndex,const QString& defenderName,bool team);
     void setDataSource(DataSource* ds);
-    Q_INVOKABLE void resetTroop(short troopIndex, bool team);
-    Q_INVOKABLE QStringList findEnemy(short row, short col, short range, bool team) const;
-    Q_INVOKABLE void removeTroop(bool team, short index);
-    Q_INVOKABLE void addTroop(bool team, short index);
+    Q_INVOKABLE void resetTroop(quint8 troopIndex, bool team);
+    Q_INVOKABLE QStringList findEnemy(quint8 row, quint8 col, quint8 range, bool team) const;
+    Q_INVOKABLE void removeTroop(bool team, quint8 index);
+    Q_INVOKABLE void addTroop(bool team, quint8 index);
     Q_INVOKABLE void startNewGame();
     Q_INVOKABLE void resetAllTroops(bool team);
     Q_INVOKABLE void removeAllTroops(bool team);
@@ -32,7 +32,7 @@ signals:
 private:
     void resetMoves();
     DataSource* m_dataSource;
-//    short m_turn;
+//    quint8 m_turn;
     bool m_teamTurn;
     QTimer m_timer;
 

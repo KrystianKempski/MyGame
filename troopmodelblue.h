@@ -18,22 +18,21 @@ public:
     Q_PROPERTY(DataSource * dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
     enum TroopRoles{
         trHeaderRole=Qt::UserRole+1,
-        trBodyRole=Qt::UserRole+2,
-        trNameRole=Qt::UserRole+3,
-        trSpeedRole=Qt::UserRole+4,
-        trRowRole=Qt::UserRole+5,
-        trColRole=Qt::UserRole+6,
-        trMovedRole=Qt::UserRole+7,
-        trUpdateRole=Qt::UserRole+8,
-        trHpRole=Qt::UserRole+9,
-        trActiveRole=Qt::UserRole+10,
-        trRangeRole=Qt::UserRole+11,
-        trTypeRole=Qt::UserRole+12,
-        trAttacksRole=Qt::UserRole+13,
-        trAttackValRole=Qt::UserRole+14,
-        trDmgDiceRole=Qt::UserRole+15,
-        trDmgValRole=Qt::UserRole+16,
-        trDefenceRole=Qt::UserRole+17
+        trBodyRole,
+        trNameRole,
+        trSpeedRole,
+        trRowRole,
+        trColRole,
+        trMovedRole,
+        trHpRole,
+        trActiveRole,
+        trRangeRole,
+        trTypeRole,
+        trAttacksRole,
+        trAttackValRole,
+        trDmgDiceRole,
+        trDmgValRole,
+        trDefenceRole
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

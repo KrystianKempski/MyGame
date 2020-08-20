@@ -202,15 +202,16 @@ bool DataSource::getTokenIn(int row, int column) const
     return m_tokenIn->at(m_cellRows*row+column);
 }
 
-short DataSource::getCellRowCount() const
+quint8 DataSource::getCellRowCount() const
 {
     return m_cellRows;
 }
 
-short DataSource::getCellColumnCount() const
+quint8 DataSource::getCellColumnCount() const
 {
     return m_cellColumns;
 }
+
 
 QString DataSource::readConsole() const
 {
@@ -227,7 +228,7 @@ bool DataSource::teamTurn() const
     return m_teamTurn;
 }
 
-short DataSource::turn() const
+quint8 DataSource::turn() const
 {
     return m_turn;
 }
@@ -269,7 +270,7 @@ void DataSource::setTeamTurn(bool teamTurn)
     emit teamTurnChanged(m_teamTurn);
 }
 
-void DataSource::setTurn(short turn)
+void DataSource::setTurn(quint8 turn)
 {
     if (m_turn == turn)
         return;
@@ -308,20 +309,29 @@ void DataSource::addTroop(Troop *value,bool team)
     }
 }
 
-void DataSource::removeTroop(bool team, short index)
+void DataSource::removeTroop(bool team, quint8 index)
 {
     if(team){
         emit preRemoveTroopRed(index);
-        setTokenIn(m_troopsRed.at(index)->statList().at(17).toInt(),m_troopsRed.at(index)->statList().at(18).toInt(),false);
+        setTokenIn( getStat<quint8>(index,17,false),getStat<quint8>(index,18,false),team);
         m_troopsRed.removeAt(index) ;
 
         emit postRemoveTroopRed();
     }else{
         emit preRemoveTroopBlue(index);
-        setTokenIn(m_troopsBlue.at(index)->statList().at(17).toInt(),m_troopsBlue.at(index)->statList().at(18).toInt(),false);
+        setTokenIn(getStat<quint8>(index,17,false),getStat<quint8>(index,18,false),team);
         m_troopsBlue.removeAt(index) ;
         emit postRemoveTroopBlue();
     }
 }
 
-
+template<>
+QString DataSource::getStat<QString>(quint8 troopIndex, quint8 statIndex, bool team){
+      return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toString():
+                   m_troopsBlue.at(troopIndex)->statList().at(statIndex).toString();
+}
+template<>
+QJsonValue DataSource::getStat<QJsonValue>(quint8 troopIndex, quint8 statIndex, bool team){
+      return team? m_troopsRed.at(troopIndex)->statList().at(statIndex):
+                   m_troopsBlue.at(troopIndex)->statList().at(statIndex);
+}

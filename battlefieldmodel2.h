@@ -28,8 +28,8 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void setDataSource(DataSource * dataSource);
-    Q_INVOKABLE void colorCells(int row,int col, int speed,int color,bool moved);
-     Q_INVOKABLE void setCellAvailability(short row,short col, bool aval);
+    Q_INVOKABLE void colorCells(quint8 row,quint8 col, quint8 speed,quint8 color,bool moved);
+     Q_INVOKABLE void setCellAvailability(quint8 row,quint8 col, bool aval);
     Q_INVOKABLE void updateModel();
 private:
     DataSource  *m_dataSource;

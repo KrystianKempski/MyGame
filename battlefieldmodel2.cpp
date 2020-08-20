@@ -79,15 +79,15 @@ void BattlefieldModel2::setDataSource(DataSource *dataSource)
 {
     m_dataSource = dataSource;
 }
-void BattlefieldModel2::colorCells(int row, int col, int speed, int color,bool moved)
+void BattlefieldModel2::colorCells(quint8 row, quint8 col, quint8 speed, quint8 color,bool moved)
 {
     m_cellRows = m_dataSource->getCellRowCount();
     m_cellColumns =m_dataSource->getCellColumnCount();
     if(moved) return;
-    short iZ=-speed;
-    short jZ=-speed;
-    for(short i=row-speed;i<=row+speed;i++){
-        for(short j=col-speed;j<=col+speed;j++){
+    qint8 iZ=-speed;
+    qint8 jZ=-speed;
+    for(qint8 i=row-speed;i<=row+speed;i++){
+        for(qint8 j=col-speed;j<=col+speed;j++){
             if(qAbs(jZ)+qAbs(iZ)<=speed+1 && j>=0 && i>=0&&i<m_cellRows&&j<m_cellColumns){
                 QModelIndex index = createIndex(i,j);
                 switch (color) {
@@ -118,7 +118,7 @@ void BattlefieldModel2::colorCells(int row, int col, int speed, int color,bool m
     }
 }
 
-void BattlefieldModel2::setCellAvailability(short row, short col, bool aval)
+void BattlefieldModel2::setCellAvailability(quint8 row, quint8 col, bool aval)
 {
     m_dataSource->setTokenIn(row,col,aval);
 }
