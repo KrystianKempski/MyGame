@@ -44,45 +44,44 @@ void GameLogic::attack(quint8 attackerIndex,const QString& defenderName,bool tea
 {
     Troop *attackerTroop = m_dataSource->dataItems(team).at(attackerIndex);
     QString message="";
-    quint8 attacks = attackerTroop->statList().at(22).toInt();             //pobranie liczby ataków atakującego
+    quint8 attacks = attackerTroop->statList().at(DataSource::attacks).toInt();             //pobranie liczby ataków atakującego
     if(attacks==0) {
         m_dataSource->setInfo("brak możliwości ataku");
     }else{
 
-        quint8 attackValue = attackerTroop->statList().at(3).toInt();       //pobieranie wartości ataku
-        quint8 dmg = attackerTroop->statList().at(6).toInt();               //pobieranie obrażeń
-        quint8 dmgDice = attackerTroop->statList().at(5).toInt();           //pobieranie kości obrażeń
-        QString attackerName=attackerTroop->statList().at(0).toString();   //pobieranie nazwy atakującego
+        quint8 attackValue = attackerTroop->statList().at(DataSource::atkVal).toInt();       //pobieranie wartości ataku
+        quint8 dmg = attackerTroop->statList().at(DataSource::dmgVal).toInt();               //pobieranie obrażeń
+        quint8 dmgDice = attackerTroop->statList().at(DataSource::dmgDice).toInt();           //pobieranie kości obrażeń
+        QString attackerName=attackerTroop->statList().at(DataSource::name).toString();   //pobieranie nazwy atakującego
         QJsonValue jAttacks(attacks-1);                                                                      //zmniejszenie liczby ataków atakującego po ataku
-        if(jAttacks.toInt()==0) {                                                                            //jeśli ataki się wyczerpały jednosta nie może się poruszać
+        if(attacks==1) {                                                                            //jeśli ataki się wyczerpały jednosta nie może się poruszać
             QJsonValue jMoved(true);
-            attackerTroop->setStatList(21,jMoved);
+            attackerTroop->setStatList(DataSource::moved,jMoved);
         }
-        attackerTroop->setStatList(22,jAttacks);                           //zmiana liczby ataków atakującego w datasource
+        attackerTroop->setStatList(DataSource::attacks,jAttacks);                           //zmiana liczby ataków atakującego w datasource
         //atak:
         for(auto &troop : m_dataSource->dataItems(!team)){
-            if(troop->statList().at(0).toString()==defenderName){
-                quint8 defence = troop->statList().at(4).toInt();
+            if(troop->statList().at(DataSource::name).toString()==defenderName){
+                quint8 defence = troop->statList().at(DataSource::def).toInt();
                 quint8 attackRoll=QRandomGenerator::global()->bounded(1,20);
                 qint8 attackTest = attackRoll +attackValue - defence;
                 if(attackTest>=0) {
                     message=message+attackerName+ " trafia "+ defenderName+"!: " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
                     quint8 dmgDealt = QRandomGenerator::global()->bounded(1,dmgDice)+dmg;
                     message=message+"\r\n zadano "+QString::number(dmgDealt)+" obrażeń ";
-                    quint8 hp=troop->statList().at(24).toInt();
+                    quint8 hp=troop->statList().at(DataSource::hp).toInt();
                     if(hp<=dmgDealt){
                         message=message+"\r\n"+defenderName+" zniszczona!";
                         QJsonValue troopActive(false);
-                        troop->setStatList(23,troopActive);                  //zmiana statusu jednostki na nieaktywny
+                        troop->setStatList(DataSource::active,troopActive);                  //zmiana statusu jednostki na nieaktywny
                     }
                     QJsonValue jsonDmg(hp-dmgDealt);
-                    troop->setStatList(24,jsonDmg);                          //zmiana hp jednostyki
+                    troop->setStatList(DataSource::hp,jsonDmg);                          //zmiana hp jednostyki
                 }else {
                     message=message+attackerName+ " pudłuje "+defenderName+": " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
                 }
             }
         }
-       // attackerTroop->deleteLater();
         m_dataSource->writeConsole(message);
         emit dataChanged();
     }
@@ -98,12 +97,12 @@ void GameLogic::resetMoves()
     QJsonValue newMoves(false);
     QJsonValue newAttacks(2);
     for(auto &troop : m_dataSource->dataItems(true)){
-        troop->setStatList(21,newMoves);
-        troop->setStatList(22,newAttacks);
+        troop->setStatList(DataSource::moved,newMoves);
+        troop->setStatList(DataSource::attacks,newAttacks);
     }
     for(auto &troop : m_dataSource->dataItems(false)){
-        troop->setStatList(21,newMoves);
-        troop->setStatList(22,newAttacks);
+        troop->setStatList(DataSource::moved,newMoves);
+        troop->setStatList(DataSource::attacks,newAttacks);
     }
 
     emit dataChanged();
@@ -216,8 +215,8 @@ void GameLogic::resetAllTroops(bool team)
     QJsonValue troopActive(true);
        for(auto &troop : m_dataSource->dataItems(team)){
         QJsonValue hp= troop->statList().at(2);
-        troop->setStatList(24,hp);
-        troop->setStatList(23,troopActive);
+        troop->setStatList(DataSource::hp,hp);
+        troop->setStatList(DataSource::active,troopActive);
     }
     resetMoves();
      emit dataChanged();
