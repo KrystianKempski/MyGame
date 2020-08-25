@@ -128,7 +128,7 @@ void DataSource::readFinished()
                 if(i>=dataItems(true).size()+dataItems(false).size()){
                     troop = new Troop(this);
                 }else{
-                    troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);
+                    troop= dataItems(team.toBool()).at(team.toBool()?troopRedIndex++:troopBlueIndex++);     //pobranie odpowiedniej jednostki na podstawie drużynu, następnie inkrementacja indeksu
                 }
                 troop->setStatList(0,name);
                 troop->setStatList(1,type);
@@ -158,7 +158,7 @@ void DataSource::readFinished()
                 troop->setStatList(25,blank3);
                 setTokenIn(row.toInt(),col.toInt(),true);
 
-                if(i>=dataItems(true).size()+dataItems(false).size()) addTroop(troop,team.toBool());      //dodawanie oddziału do drużyn
+                if(i>=dataItems(true).size()+dataItems(false).size()) addTroop(troop,team.toBool());      //dodawanie nowego oddziału do drużyn
 
             }
             troop=nullptr;
