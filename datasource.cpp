@@ -95,7 +95,7 @@ void DataSource::readFinished()
             int troopRedIndex=0;
             int troopBlueIndex=0;
             m_tokenIn->fill(false);
-            Troop *troop = new Troop(this);
+            Troop *troop;
             for(int i=0;i<troopsArray.size();i++){
                 QJsonObject object = troopsArray.at(i).toObject();
                 QJsonValue name = object["NAME"];

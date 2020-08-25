@@ -1,5 +1,5 @@
 #include "gamelogic.h"
-
+#include <functional>
 GameLogic::GameLogic(QObject *parent) : QObject(parent)
 {
     connect(&m_timer,&QTimer::timeout,this,&GameLogic::update);
@@ -119,6 +119,15 @@ void GameLogic::resetTroop(quint8 index, bool team)
 QStringList GameLogic::findEnemy(quint8 row, quint8 col, quint8 range, bool team) const
 {
     QStringList enemy;
+    
+    auto list = std::find_if(m_dataSource->dataItems(team).begin(),m_dataSource->dataItems(team).end(),
+                 [row,col,range](Troop *troop){
+        
+        int enemyRow = troop->statList().at(DataSource::row).toInt();
+        int enemyCol = troop->statList().at(DataSource::col).toInt();
+        return (qAbs(enemyRow-row)<=range && qAbs(enemyCol-col)<=range &&
+                    (qAbs(enemyRow-row)+qAbs(enemyCol-col)<range*2)); });
+    
     for(auto &troop : m_dataSource->dataItems(team)){
         int enemyRow = troop->statList().at(DataSource::row).toInt();
         int enemyCol = troop->statList().at(DataSource::col).toInt();
