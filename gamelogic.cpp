@@ -30,12 +30,11 @@ void GameLogic::resetTroopsPosition(bool team)
 {
     quint8 newRow;
     team? newRow=3:newRow=12;
-    QJsonValue jNewRow(newRow);
     for(int i=0;i<m_dataSource->dataItems(team).size();i++){
-        QJsonValue jNewColumn(i+3);
+        quint8 newColumn = i+3;
         m_dataSource->setTokenIn(m_dataSource->getStat<quint8>(i,DataSource::row,team),m_dataSource->getStat<quint8>(i,DataSource::col,team),false);
-        m_dataSource->setStat(i,DataSource::row,team,jNewRow);
-        m_dataSource->setStat(i,DataSource::col,team,jNewColumn);
+        m_dataSource->setStat(i,DataSource::row,team,newRow);
+        m_dataSource->setStat(i,DataSource::col,team,newColumn);
     }
     emit dataChanged();
 }
@@ -53,13 +52,11 @@ void GameLogic::attack(quint8 attackerIndex,const QString& defenderName,bool tea
         quint8 dmg = attackerTroop->statList().at(DataSource::dmgVal).toInt();               //pobieranie obrażeń
         quint8 dmgDice = attackerTroop->statList().at(DataSource::dmgDice).toInt();           //pobieranie kości obrażeń
         QString attackerName=attackerTroop->statList().at(DataSource::name).toString();   //pobieranie nazwy atakującego
-        QJsonValue jAttacks(attacks-1);                                                                      //zmniejszenie liczby ataków atakującego po ataku
-        if(attacks==1) {                                                                            //jeśli ataki się wyczerpały jednosta nie może się poruszać
-            QJsonValue jMoved(true);
-            attackerTroop->setStatList(DataSource::moved,jMoved);
+        if(--attacks==1) {                                                                           //zmniejszenie liczby ataków atakującego po ataku jeśli ataki się wyczerpały jednosta nie może się poruszać
+            attackerTroop->setStatList(DataSource::moved,true);
         }
-        attackerTroop->setStatList(DataSource::attacks,jAttacks);                           //zmiana liczby ataków atakującego w datasource
-        //atak:
+        attackerTroop->setStatList(DataSource::attacks,attacks);                           //zmiana liczby ataków atakującego w datasource
+ //atak:
         for(auto &troop : m_dataSource->dataItems(!team)){
             if(troop->statList().at(DataSource::name).toString()==defenderName){
                 quint8 defence = troop->statList().at(DataSource::def).toInt();
@@ -72,11 +69,9 @@ void GameLogic::attack(quint8 attackerIndex,const QString& defenderName,bool tea
                     quint8 hp=troop->statList().at(DataSource::hp).toInt();
                     if(hp<=dmgDealt){
                         message=message+"\r\n"+defenderName+" zniszczona!";
-                        QJsonValue troopActive(false);
-                        troop->setStatList(DataSource::active,troopActive);                  //zmiana statusu jednostki na nieaktywny
+                        troop->setStatList(DataSource::active,false);                  //zmiana statusu jednostki na nieaktywny
                     }
-                    QJsonValue jsonDmg(hp-dmgDealt);
-                    troop->setStatList(DataSource::hp,jsonDmg);                          //zmiana hp jednostyki
+                    troop->setStatList(DataSource::hp,hp-dmgDealt);                          //zmiana hp jednostyki
                 }else {
                     message=message+attackerName+ " pudłuje "+defenderName+": " + QString::number(attackRoll) +"+" +QString::number(attackValue)+"="+QString::number(attackRoll+attackValue)+ " vs: " +QString::number(defence);
                 }
@@ -94,8 +89,8 @@ void GameLogic::setDataSource(DataSource *ds)
 
 void GameLogic::resetMoves()
 {
-    QJsonValue newMoves(false);
-    QJsonValue newAttacks(2);
+    bool newMoves(false);
+    quint8 newAttacks(2);
     for(auto &troop : m_dataSource->dataItems(true)){
         troop->setStatList(DataSource::moved,newMoves);
         troop->setStatList(DataSource::attacks,newAttacks);
@@ -109,10 +104,8 @@ void GameLogic::resetMoves()
 }
 void GameLogic::resetTroop(quint8 index, bool team)
 {
-    QJsonValue hp= m_dataSource->getStat<quint8>(index,DataSource::maxHp,team);
-    m_dataSource->setStat(index,DataSource::hp,team,hp);
-    QJsonValue troopActive(true);
-     m_dataSource->setStat(index,DataSource::active,team,troopActive);
+    m_dataSource->setStat(index,DataSource::hp,team,m_dataSource->getStat<quint8>(index,DataSource::maxHp,team));
+     m_dataSource->setStat(index,DataSource::active,team,true);
     emit dataChanged();
 }
 QStringList GameLogic::findEnemy(quint8 row, quint8 col, quint8 range, bool team) const
@@ -140,62 +133,33 @@ void GameLogic::removeTroop(bool team, quint8 index)
 void GameLogic::addTroop(bool aTeam,quint8 index)
 {
     Troop *troop = new Troop(this);
-    quint8 sRow;
-    QJsonValue name("");
-    QJsonValue type("");
-    QJsonValue maxHp(20);
-    QJsonValue aVal(2);
-    QJsonValue def(10);
-    QJsonValue dDice(6);
-    QJsonValue dmg(0);
-    QJsonValue speed(3);
-    QJsonValue range(1);
-    QJsonValue aCharge(0);
-    QJsonValue aCrowd(0);
-    QJsonValue morale(0);
-    QJsonValue aType("");
-    QJsonValue str(0);
-    QJsonValue agi(0);
-    QJsonValue end(0);
-    QJsonValue will(0);
-    aTeam?  sRow=0: sRow=14;
-    QJsonValue row(sRow);
-    QJsonValue col(3+index);
-    QJsonValue id(index);
-    QJsonValue team(aTeam);
-    QJsonValue moved(false);
-    QJsonValue attacks(2) ;
-    QJsonValue active(true);
-    QJsonValue hp(0);
-    QJsonValue blank3(0);
-
-    troop->setStatList(DataSource::name,name);
-    troop->setStatList(DataSource::type,type);
-    troop->setStatList(DataSource::maxHp,maxHp);
-    troop->setStatList(DataSource::atkVal,aVal);
-    troop->setStatList(DataSource::def,def);
-    troop->setStatList(DataSource::dmgDice,dDice);
-    troop->setStatList(DataSource::dmgVal,dmg);
-    troop->setStatList(DataSource::speed,speed);
-    troop->setStatList(DataSource::range,range);
-    troop->setStatList(DataSource::atkCharg,aCharge);
-    troop->setStatList(DataSource::atkCrowd,aCrowd);
-    troop->setStatList(DataSource::morale,morale);
-    troop->setStatList(DataSource::atkType,aType);
-    troop->setStatList(DataSource::str,str);
-    troop->setStatList(DataSource::agi,agi);
-    troop->setStatList(DataSource::end,end);
-    troop->setStatList(DataSource::will,will);
-    troop->setStatList(DataSource::row,row);
-    troop->setStatList(DataSource::col,col);
-    troop->setStatList(DataSource::id,id);
-    troop->setStatList(DataSource::team,team);
-    troop->setStatList(DataSource::moved,moved);
-    troop->setStatList(DataSource::attacks,attacks);
-    troop->setStatList(DataSource::active,active);
-    troop->setStatList(DataSource::hp,hp);
-    troop->setStatList(DataSource::blank,blank3);
-    m_dataSource->setTokenIn(row.toInt(),col.toInt(),true);
+    troop->setStatList(DataSource::name,"");
+    troop->setStatList(DataSource::type,"");
+    troop->setStatList(DataSource::maxHp,20);
+    troop->setStatList(DataSource::atkVal,1);
+    troop->setStatList(DataSource::def,10);
+    troop->setStatList(DataSource::dmgDice,6);
+    troop->setStatList(DataSource::dmgVal,1);
+    troop->setStatList(DataSource::speed,3);
+    troop->setStatList(DataSource::range,1);
+    troop->setStatList(DataSource::atkCharg,0);
+    troop->setStatList(DataSource::atkCrowd,0);
+    troop->setStatList(DataSource::morale,0);
+    troop->setStatList(DataSource::atkType,"");
+    troop->setStatList(DataSource::str,0);
+    troop->setStatList(DataSource::agi,0);
+    troop->setStatList(DataSource::end,0);
+    troop->setStatList(DataSource::will,0);
+    troop->setStatList(DataSource::row,aTeam ? 0 : 14);
+    troop->setStatList(DataSource::col,3+index);
+    troop->setStatList(DataSource::id,index);
+    troop->setStatList(DataSource::team,aTeam);
+    troop->setStatList(DataSource::moved,false);
+    troop->setStatList(DataSource::attacks,2);
+    troop->setStatList(DataSource::active,true);
+    troop->setStatList(DataSource::hp,20);
+    troop->setStatList(DataSource::blank,0);
+    m_dataSource->setTokenIn(aTeam ? 0 : 14,3+index,true);
     m_dataSource->addTroop(troop,aTeam);
     emit dataChanged();
 }
@@ -210,13 +174,9 @@ void GameLogic::startNewGame()
 
 void GameLogic::resetAllTroops(bool team)
 {
-    QJsonValue newMoves(false);
-    QJsonValue newAttacks(2);
-    QJsonValue troopActive(true);
        for(auto &troop : m_dataSource->dataItems(team)){
-        QJsonValue hp= troop->statList().at(2);
-        troop->setStatList(DataSource::hp,hp);
-        troop->setStatList(DataSource::active,troopActive);
+        troop->setStatList(DataSource::hp,troop->statList().at(DataSource::maxHp));
+        troop->setStatList(DataSource::active,true);
     }
     resetMoves();
      emit dataChanged();

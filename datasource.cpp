@@ -313,13 +313,13 @@ void DataSource::removeTroop(bool team, quint8 index)
 {
     if(team){
         emit preRemoveTroopRed(index);
-        setTokenIn( getStat<quint8>(index,17,false),getStat<quint8>(index,18,false),team);
+        setTokenIn( getStat<quint8>(index,DataSource::row,team),getStat<quint8>(index,DataSource::col,team),false);
         m_troopsRed.removeAt(index) ;
 
         emit postRemoveTroopRed();
     }else{
         emit preRemoveTroopBlue(index);
-        setTokenIn(getStat<quint8>(index,17,false),getStat<quint8>(index,18,false),team);
+        setTokenIn( getStat<quint8>(index,DataSource::row,team),getStat<quint8>(index,DataSource::col,team),false);
         m_troopsBlue.removeAt(index) ;
         emit postRemoveTroopBlue();
     }

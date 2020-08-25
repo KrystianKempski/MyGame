@@ -15,7 +15,13 @@ public:
     explicit Troop(QObject *parent = nullptr);
     ~Troop();
     Q_INVOKABLE QJsonArray statList() const;
-    void setStatList(int index,QJsonValue &value);
+    template<typename T>
+    void setStatList(int index, T &&value){
+        QJsonValue jValue(value);
+        m_statList->replace(index,jValue);
+        emit statListChanged();
+    }
+
     void write(QJsonObject &json) const;
 signals:
 

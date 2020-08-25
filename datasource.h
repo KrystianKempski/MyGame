@@ -33,21 +33,20 @@ public:
     Q_INVOKABLE quint8 getCellRowCount() const;
     Q_INVOKABLE quint8 getCellColumnCount() const;
     void initialize();
-    void setStat(quint8 troopIndex,quint8 statIndex, bool team, QJsonValue temp2)
+    template<typename T>
+    void setStat(quint8 troopIndex,quint8 statIndex, bool team, T temp2)
     {
-           team? m_troopsRed.at(troopIndex)->setStatList(statIndex,temp2) : m_troopsBlue.at(troopIndex)->setStatList(statIndex,temp2);
+        team? m_troopsRed.at(troopIndex)->setStatList(statIndex,temp2) : m_troopsBlue.at(troopIndex)->setStatList(statIndex,temp2);
     }
 
     template<typename T>
     T getStat(quint8 troopIndex,quint8 statIndex, bool team)
     {
-        if( typeid(T)==typeid (int)){
+        if (std::is_integral<T>::value && !std::is_same<T, bool>::value){
             return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toInt():
                          m_troopsBlue.at(troopIndex)->statList().at(statIndex).toInt();
-        }else if( typeid(T)==typeid (quint8)){
-            return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toInt():
-                         m_troopsBlue.at(troopIndex)->statList().at(statIndex).toInt();
-        }else if(typeid(T)==typeid(bool)){
+
+        }else if (std::is_same<T, bool>::value){
             return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toBool():
                          m_troopsBlue.at(troopIndex)->statList().at(statIndex).toBool();
         }else{
