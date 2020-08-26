@@ -1,3 +1,9 @@
+/****************************************************************************
+** Klasa DataSource przechowuje wszystkie dane. Do niej odwołują się modele
+** oddziałów, model pola bitwy, i oddziały. W niej są przechowywane dane po-
+** szczególnych jednostek. DataSource obsługuje połączenie z serwerem przecho-
+** wującym dane w formacie json, na którym zapisywana jest cała baza danych
+****************************************************************************/
 #ifndef DATASOURCE_H
 #define DATASOURCE_H
 
@@ -45,7 +51,6 @@ public:
         if constexpr(std::is_arithmetic_v<T> && !std::is_same_v<T, bool>){
             return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toInt():
                          m_troopsBlue.at(troopIndex)->statList().at(statIndex).toInt();
-
         }else if constexpr(std::is_same_v<T, bool>){
             return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toBool():
                          m_troopsBlue.at(troopIndex)->statList().at(statIndex).toBool();

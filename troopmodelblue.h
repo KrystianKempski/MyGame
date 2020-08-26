@@ -1,3 +1,12 @@
+/****************************************************************************
+** Klasa TroopModelBlue odpowiada za stworzenie modelu armii jednej ze stron
+** Wykorzystująć QAbstractTableModel, przechowuje informacje odnoścnie posz-
+** czególnych oddziałow, oraz umożliwia eksportowanie ich do QML. Model akty-
+** wnie śledzi zmiany wprowadzone przez użytkownika i aktualizuje je na serw-
+** erze.
+****************************************************************************/
+
+
 #ifndef TABLEMODEL3_H
 #define TABLEMODEL3_H
 

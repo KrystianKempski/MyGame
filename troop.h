@@ -1,3 +1,10 @@
+/****************************************************************************
+** Klasa Troop reprezentuje pojedynczy oddział - jednostkę, która jest podsta-
+** wą gry. Informacja o wszystkich statystykach jednostki jest przechowywana
+** w JsonArray, którą łatwo pobrać i wysłać na serwer z bazą danych. Klasa
+** Troop ma metody umożliwiające pobranie i ustawienie statystyk jednostki.
+****************************************************************************/
+
 #ifndef TROOP_H
 #define TROOP_H
 

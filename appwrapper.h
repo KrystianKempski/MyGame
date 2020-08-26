@@ -1,3 +1,9 @@
+/****************************************************************************
+** Klasa AppWrapper wyciąga QQmlApplicationEngine z main i inicjalizuje go
+**  wewnątrz metody initialize, dzięki czemu można wyeksportować wybrane klasy
+**  do QML, połączyć ich sygnały i sloty, oraz ustawić na klasę z bazą danych
+****************************************************************************/
+
 #ifndef APPWRAPPER_H
 #define APPWRAPPER_H
 

@@ -37,7 +37,5 @@ void AppWrapper::initialize()
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     m_engine.load(url);
-    //connect(m_app,&QGuiApplication::aboutToQuit,[=](){qInfo()<<"test";} );
 
-  //  ds->deleteLater();
 }

@@ -1,3 +1,9 @@
+/****************************************************************************
+** Klasa GameLogic przechowuje metody pozwalające na obsługę i sterowanie jed-
+** nostkami na polu bitwy. Kontroluje też zasady potyczki, dodawanie i usuwanie
+** jednostek oraz turę gry.
+****************************************************************************/
+
 #ifndef GAMELOGIC_H
 #define GAMELOGIC_H
 

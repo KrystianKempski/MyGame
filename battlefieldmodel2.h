@@ -1,3 +1,10 @@
+/****************************************************************************
+** Klasa BattelfieldModel odpowiada za stworzenie siatki pola bitwy. Wykorzys-
+** tuje QAbstractTableModel do wymodelowania wszystkich kafelków po których
+** poruszają się jednostki. Znajduje informacje dotyczące ich dostępności,
+** koloru, oraz obecności tokena jednostki
+****************************************************************************/
+
 #ifndef BATTLEFIELDMODEL2_H
 #define BATTLEFIELDMODEL2_H
 
@@ -10,8 +17,8 @@ class BattlefieldModel2 : public QAbstractTableModel
 public:
     enum cellRoles{
         cellAvalibleRole=Qt::UserRole+1,
-        cellTokenInRole=Qt::UserRole+2,
-        cellColorRole=Qt::UserRole+3
+        cellTokenInRole,
+        cellColorRole
     };
     enum cellColors{
         cellColorTrans=0,
