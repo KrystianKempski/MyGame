@@ -15,11 +15,17 @@ public:
     explicit Troop(QObject *parent = nullptr);
     ~Troop();
     Q_INVOKABLE QJsonArray statList() const;
+
     template<typename T>
     void setStatList(int index, T &&value){
-        QJsonValue jValue(value);
-        m_statList->replace(index,jValue);
-        emit statListChanged();
+        if constexpr(!std::is_same_v<T, QJsonValue>){
+            QJsonValue jValue(value);
+            m_statList->replace(index,jValue);
+            emit statListChanged();
+        }else{
+            m_statList->replace(index,value);
+            emit statListChanged();
+        }
     }
 
     void write(QJsonObject &json) const;

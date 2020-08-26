@@ -73,9 +73,3 @@ QJsonArray Troop::statList() const
     return *m_statList;
 }
 
-template<>
-void Troop::setStatList<QJsonValue>(int index, QJsonValue &&value)
-{
-    m_statList->replace(index,value);
-    emit statListChanged();
-}

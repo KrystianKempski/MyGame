@@ -42,13 +42,19 @@ public:
     template<typename T>
     T getStat(quint8 troopIndex,quint8 statIndex, bool team)
     {
-        if (std::is_integral<T>::value && !std::is_same<T, bool>::value){
+        if constexpr(std::is_arithmetic_v<T> && !std::is_same_v<T, bool>){
             return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toInt():
                          m_troopsBlue.at(troopIndex)->statList().at(statIndex).toInt();
 
-        }else if (std::is_same<T, bool>::value){
+        }else if constexpr(std::is_same_v<T, bool>){
             return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toBool():
                          m_troopsBlue.at(troopIndex)->statList().at(statIndex).toBool();
+        }else if (std::is_same_v<T, QString>){
+            return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toString():
+                         m_troopsBlue.at(troopIndex)->statList().at(statIndex).toString();
+        }else if (std::is_same_v<T, QJsonValue>){
+            return team? m_troopsRed.at(troopIndex)->statList().at(statIndex):
+                         m_troopsBlue.at(troopIndex)->statList().at(statIndex);
         }else{
             qInfo() << "zły typ danych";
             return 0;

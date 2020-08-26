@@ -325,13 +325,3 @@ void DataSource::removeTroop(bool team, quint8 index)
     }
 }
 
-template<>
-QString DataSource::getStat<QString>(quint8 troopIndex, quint8 statIndex, bool team){
-      return team? m_troopsRed.at(troopIndex)->statList().at(statIndex).toString():
-                   m_troopsBlue.at(troopIndex)->statList().at(statIndex).toString();
-}
-template<>
-QJsonValue DataSource::getStat<QJsonValue>(quint8 troopIndex, quint8 statIndex, bool team){
-      return team? m_troopsRed.at(troopIndex)->statList().at(statIndex):
-                   m_troopsBlue.at(troopIndex)->statList().at(statIndex);
-}
